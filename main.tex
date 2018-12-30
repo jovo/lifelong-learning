@@ -11,7 +11,7 @@
 \maketitle
 
 % \begin{abstract}
-The goal of this document is twofold. First, formally define lifelong learning from the perspective of statistics and statistical learning theory.  Second, demonstrate how lifelong learning forests (L2F) can be developed into the first and only universal lifelong learning machines, that is, lifelong learning machines that achieve optimal performance over any distributional assumptions.  To do so, we first formalize a framework.    
+The goal of this document is twofold. First, formally define lifelong learning from the perspective of statistics and statistical learning theory.  Second, demonstrate how lifelong learning forests (L2F) can be developed into the first and only universal lifelong learning machines, that is, lifelong learning machines that achieve optimal performance over any distributional assumptions.  
 % \end{abstract}
 
 \tableofcontents
@@ -21,12 +21,11 @@ The goal of this document is twofold. First, formally define lifelong learning f
 \section{Static and Lifelong Learning Theory}
 \subsection{Statistical Decision \& Learning Theory}
 
-\emph{Statistical decision theory} is a framework for formalizing decision theoretic tasks in the language of statistics.  An \emph{exploitation task} $\mathcal{T}$ is defined by six objects.
+\emph{Statistical decision theory} is a framework for formalizing decision theoretic tasks in the language of statistics.  An \emph{exploitation task} $\mathcal{T}$ is a sextuple defined by six elements.
 \begin{enumerate}
   \item \textbf{Measurement Space:} $\mathcal{Z} \defn \{ \mathcal{Z}_k \forall k \in [K]\}$. We observe data in $\mathcal{Z}$, which is the composition of  $K$ modalities (e.g., images and text).  Samples in the measurement space are denoted  $z \in \mathcal{Z}$.  
   %
-	\item \textbf{Density:} $P \in \mc{P}=\{P_{\theta}: \theta \in \Theta\}$.  A model is a family of densities $P := P_{\theta}$, where $d=|\Theta|$ need not be finite. 
-    We assume that random variables $Z \colon \Omega \to \mathcal{Z}$  are distributed according to some density $P$, with realizations $z \in \mathcal{Z}$.
+	\item \textbf{Density:} $P \in \mc{P}=\{P_{\theta}: \theta \in \Theta\}$.  A model $\mc{P}$ is a family of densities $P := P_{\theta}$, where the dimensionality of the parameter characterizing the distribution, $d=|\Theta|$, need not be finite.     We assume that random variables $Z \colon \Omega \to \mathcal{Z}$  are distributed according to some density $P$, with realizations $z \in \mathcal{Z}$.
     %
 	\item \textbf{Action space:} $\mc{A}=\{a : a \in \mc{A}\}$.  The action space $\mc{A}$ is simply the set of actions (or decisions) that we might take.  Actions  include hypothesis testing, estimation, and control. 
 	%
@@ -35,11 +34,11 @@ The goal of this document is twofold. First, formally define lifelong learning f
 	\item \textbf{Risk functional:} $\RR \colon \mc{L} \times \mc{P} \times \Phi \to \Real_+$.	The risk functional $\RR$ defines the criterion of optimality.  Classically, risk is defined as expected loss, $\RR_\ell(P,\phi) \defn \EE_P[\ell(Z,\phi(Z))]$.
 \end{enumerate}
 
-\noindent  The \emph{Bayes (or Optimal) decision rule} for a given exploitation task $\mathcal{T}=\{\mathcal{Z}, P, \mathcal{A}, \Phi, \ell, \RR\}$ is the decision rule that minimizes risk (which is called \emph{Bayes Risk} for that task: 
+\noindent  A \emph{Bayes (or Optimal) decision rule} for a given exploitation task $\mathcal{T}=\{\mathcal{Z}, P, \mathcal{A}, \Phi, \ell, \RR\}$ is the decision rule that minimizes risk (which is called \emph{Bayes Risk} for that task: 
 \begin{align}
     \phi_*^\mathcal{T} = \argmin_{\phi \in \Phi} \EE_P [\ell(Z, \phi(Z))].
 \end{align}
-In learning theory we devise  \textbf{learners}, $\mathcal{F} = \{f^n : \mathcal{Z}^n \to \Phi^n, \forall n\}$, that map $n$ measurements to an induced decision function, $\mh{\phi}_n$. 
+A Bayes rule is not necessarily unique for a given task, and a given rule might be Bayes optimal for a number of different tasks.  That said, for any task, there exists a set of Bayes optimal decision rules.  In learning theory we devise  \textbf{learners}, $\mathcal{F} = \{f^n : \mathcal{Z}^n \to \Phi^n, \forall n\}$, that map $n$ measurements to an induced decision function, $\mh{\phi}_n$. 
 A \emph{learning rule} is the sequence of learning functions, $\mv{f}= f_1,f_2,\ldots$.  We say that a learning rule is \emph{consistent for model $\mc{P}$} if the risk of its estimated decision function converges to Bayes risk, that is:
 % \begin{align}
 $\mv{f}_* \defn \{ \mv{f} : \RR_\ell(P,f_n(\mc{D}_n)) \to \RR_* \text{ as } n \conv \infty, \forall P \in \mc{P} \}$.
@@ -62,28 +61,29 @@ Alternately, we may desire to minimize the probability that regret is smaller th
 % \left\lvert \sum_{t=1}^T \ell(\phi_t, z_t) - \inf_{f \in \mathcal{F}} \sum_{t=1}^T \ell ( \phi(f), z_t) \right\rvert
     \PP \left[R(\phi^t)  < \eps_t \right] > 1 - \delta.
 \end{align}
-A learning rule is said to be \emph{efficient} if it achieves~\eqref{eq:goal} with only polynomial computation.  
+A decision function space $\Phi$ is said to be ``probably almost correct'' (PAC) learnable when there exists a class of learners $\mc{F}$ that achieves~\eqref{eq:goal} with a polynomial number of samples.  A learning rule is said to be \emph{efficient} if it achieves~\eqref{eq:goal} with only polynomial space and/or time with respect to number of samples.  
 
 \subsection{Lifelong Learning Theory}
 
-In classical learning theory, there is a given task.  The key to any lifelong learning problem is that the task may change.  There are two flavors of lifelong learning: (1) in \textbf{unsupervised lifelong learning}, the learning rule knows the task \emph{may} change, but does not know when or how, and (2) in \textbf{supervised lifelong learning}, the learning rule knows that the task has changed, but still does not know how.  It would seem that the former is more difficult than the latter, but the latter has its own unique challenges as well (see Section~\ref{sec:continual} for details on unsupervised, and Section~\ref{sec:transfer} for details on supervised.  
+\textbf{Lifelong learning is concerned with learning settings where there does not exist a universally consistent decision rule.}  In other words, lifelong learning is concerned with cases that are not PAC-learnable.  There are two flavors of lifelong learning: (1) in \textbf{unsupervised lifelong learning}, the learning rule knows the task \emph{may} change, but does not know when or how, and (2) in \textbf{supervised lifelong learning}, the learning rule knows that the task has changed, but still does not know how.  It would seem that the former is more difficult than the latter, but the latter has its own unique challenges as well (see Section~\ref{sec:continual} for details on unsupervised, and Section~\ref{sec:transfer} for details on supervised).  
 
-\emph{There is another key property of lifelong learning: the ``multi-tasks'' that characterize a given problem might not admit universally consistent decision rules.}  This is in stark contrast to, for example, classification and regression, which characterizes most of modern machine learning.  In lifelong learning
-
-
+Recalling that a given task $\mathcal{T}$ is uniquely specified by a sextuple, $\{\mc{Z}, P, \mc{A}, \Phi, \ell, \mc{R}\}$, a lifelong learing \emph{multitask} consists of a set of tasks.  In the simplest construction, there are two tasks, a source task $\mathcal{T}_0$, and a target task $\mathcal{T}_1$, and at least one of six elements has changed between the two tasks.  The unsupervised case is only appropriate when the density, $P$, has changed, because if any of the other elements change, the learning rule \emph{must} know if it could even try to perform well.  The supervised case is more general, as any of the six elements could change. Note that ``supervised'' here refers to whether the fact that the task has switched is known to the learning rule, not whether the task itself is supervised.  
 
 
-Lifelong learning machines are machines that are able to achieve under changing tasks.  The nature of the change in task results in different kinds of lifelong learning machines. While others have characterized lifelong learning machines in specific contexts, to our knowledge, nobody has enumerated the set all off possible conditions under which lifelong learning machines must be able to operate. 
 
 
-\subsection{Organization}
 
-In the subsequent chapters, we provide 
-\begin{enumerate}
-    \item a formal characterization of different kinds of lifelong learning
-    \item for each, our proposal for how lifelong learning forests can achieve efficiency, and in which contexts
-    \item a set of baseline algorithms
-\end{enumerate}
+
+
+
+% \subsection{Organization}
+
+% In the subsequent chapters, we provide 
+% \begin{enumerate}
+%     \item a formal characterization of different kinds of lifelong learning
+%     \item for each, our proposal for how lifelong learning forests can achieve efficiency, and in which contexts
+%     \item a set of baseline algorithms
+% \end{enumerate}
 
 
 
@@ -93,8 +93,15 @@ In the subsequent chapters, we provide
 
 
 \clearpage 
-\section{Continual Learning}
+\section{Unsupervised Lifelong Learning}
 \label{sec:continual}
+
+
+
+changing density, or changing model.
+when density is changing, there might exist PAC-learning algorithms.
+
+
 
 In continual learning, the learner only observes a single measurement at a time, and must update the decision function based on that knowledge.  In other words, for each $t = 1,\ldots, T$, the learner is $f^t \from \mathcal{Z}^t \to \Phi$.  
 Doing so requires yet one further assumption, one about the dynamics of $P$.  For now, we will simply say that the density $P$ can change over time, and we will denote the density for the current time as $P_t$.  
@@ -168,7 +175,7 @@ Specifically, L2F in this context would work as follows.  For each new data poin
 The baselines here will again be the Oracle, as well as the parametric method with varying degrees of task knowledge. 
 
 \clearpage
-\section{Transfer Learning}
+\section{Supervised Lifelong Learning}
 \label{sec:transfer}
 
 In the above setting, there was a single task, but the data were continually coming, and the distribution of the data was potentially changing.  Here, we consider the case when there are multiple discrete tasks.  Formally, we say that there are two datasets, a source dataset $Z^\mathcal{S}$ and a target dataset $Z^\mathcal{T}$. The source dataset contains $n_s = | Z^\mathcal{S}|$ samples, and the target dataset contains $n_t = |Z^\mathcal{T}|$ samples. In general, these $n_s+n_t$ samples could come from a large number of tasks, but for simplicity, and without loss of generality, we will assume each is associated with a single task. The key that makes a given decision theoretic problem transfer learning, rather than classical learning, is that it is possible that the Bayes decision rule associated with the source task is different from the target task.  The difference could arise due to differences in: the measurement spaces, the distributions, the action spaces, the loss function, or the risk functional, because the Bayes decision rule is a function of each of these things.  The goal of transfer learning it to improve the \emph{rate} of learning on the target task, given the source task. More formally, we assume:
