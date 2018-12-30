@@ -69,64 +69,30 @@ A decision function space $\Phi$ is said to be ``probably almost correct'' (PAC)
 
 Recalling that a given task $\mathcal{T}$ is uniquely specified by a sextuple, $\{\mc{Z}, P, \mc{A}, \Phi, \ell, \mc{R}\}$, a lifelong learing \emph{multitask} consists of a set of tasks.  In the simplest construction, there are two tasks, a source task $\mathcal{T}_0$, and a target task $\mathcal{T}_1$, and at least one of six elements has changed between the two tasks.  The unsupervised case is only appropriate when the density, $P$, has changed, because if any of the other elements change, the learning rule \emph{must} know if it could even try to perform well.  The supervised case is more general, as any of the six elements could change. Note that ``supervised'' here refers to whether the fact that the task has switched is known to the learning rule, not whether the task itself is supervised.  
 
+A \emph{lifelong learning machine} (L2M) is any learning rule that is designed to solve a lifelong learning multitask. A \emph{consistent L2M} is an L2M that asymptotically achieves Bayes risk.  An \emph{efficient L2M}  is a consistent L2M that achieves Bayes risk with polynomial space and time with respect to the number of samples. The multitasks for which consistent or efficient L2M's exist remain essentially unknown.
 
 
-
-
-
-
-
-% \subsection{Organization}
-
-% In the subsequent chapters, we provide 
-% \begin{enumerate}
-%     \item a formal characterization of different kinds of lifelong learning
-%     \item for each, our proposal for how lifelong learning forests can achieve efficiency, and in which contexts
-%     \item a set of baseline algorithms
-% \end{enumerate}
-
-
-
-% In finite samples, an \emph{efficient learning rule} is one that requires few observations  to achieve a target performance, and the \emph{relative efficiency} of two rules is the ratio of their efficiencies.
-% Therefore, \textbf{in all our estimation work, the primary performance metric will be risk as a function of sample size. }
-
-
-
-\clearpage 
+% \clearpage 
 \section{Unsupervised Lifelong Learning}
 \label{sec:continual}
 
-
-
-changing density, or changing model.
-when density is changing, there might exist PAC-learning algorithms.
+There are several increasingly complex flavors unsupervised lifelong learning (ULL) that we describe below.  We start by describing a scenario that is closely related to lifelong learning, called online learning, in which the distribution is fixed, but the decision rule is learned sequentially, rather than in ``batch mode'' with access to all the data at once. 
 
 
 
-In continual learning, the learner only observes a single measurement at a time, and must update the decision function based on that knowledge.  In other words, for each $t = 1,\ldots, T$, the learner is $f^t \from \mathcal{Z}^t \to \Phi$.  
-Doing so requires yet one further assumption, one about the dynamics of $P$.  For now, we will simply say that the density $P$ can change over time, and we will denote the density for the current time as $P_t$.  
-
-
-There are three distinct kinds of continual learning which differ with regard to how $P$ is changing. Below, we describe them each, and how to address them using lifelong learning forests, as well as what to do when we do not know which of the three situations we are in. 
-
-\subsection{Constant Density $P$}
+\subsection{Sequential Learning (with Constant Density $P$)}
 \label{sec:constant}
 
-The simplest setting is that $P$ is unchanging over $t$.  
-The goal of continual learning is to find a sequence of learners, $f_1, \ldots, f_T$, that minimizes the expected regret for a given unknown density $P$.  The reason the above statement is non-trivial is because the implications are that the learner must be sufficiently good for all $t<T$ such that the resulting loss is not much more than it would have been if the learner had access to all $T$ observations even for the first $t<T$ observations.
+
+In sequential learning, the learner only observes a single measurement at a time, and must update the decision function based on that knowledge.  In other words, for each $t = 1,\ldots, T$, the learner is $f^t \from \mathcal{Z}^t \to \Phi$.  
+%  
+The goal of sequential learning is to find a sequence of learners, $f_1, \ldots, f_T$, that minimizes the expected regret for a given unknown density $P$.  The reason the above statement is non-trivial is because the implications are that the learner must be sufficiently good for all $t<T$ such that the resulting loss is not much more than it would have been if the learner had access to all $T$ observations even for the first $t<T$ observations.
+% 
+The approach to this setting, ignoring computational complexity, is trivial.  At each $t$, simply learn a new decision rule on all of the data. One can do much better than that computationally.  Specifically, one can sequentially update the learned decision rule~\cite{Xiao2010}. Strategies for online learning are a natural starting place for certain lifelong learning tasks.
 
 
-The Bayes optimal continual learner is available when the density, $P$, is available. Note that the decision rule at time $t$ is induced by, and therefore a function of, the learner at time $t$. 
 
-% \begin{align}
-%     f_t^* = \argmin \EE_P[R_T(\phi_t(f_t)]
-% \end{align}
-
-The approach to this setting, ignoring computational complexity, is trivial.  At each $t$, simply learn a new forest on all of the data. We can, of course, do much better than that.  Our Continual Lifelong Learning Forest will be based on the following.  Recent work demonstrated that a certain class of decision trees is minimax optimal, meaning that the worst risk it achieves over all distributions $P \in \mathcal{P}$ is the smallest possible over all decision functions $\phi \in \Phi$~\cite{Scott2006}.  This is achieved by writing down the solution to finding the best decision tree as a penalized optimization problem, where the penalty corresponds to the tree complexity (not just the tree depth)~\cite{Scott2005}. As it turns out, in other work,~\citet{Xiao2010} proposed a dual averaging method for regularized online learning, which can be applied to learning the trees. Therefore, we propose to combine these two approaches to build collections optimal trees online, which we will combine into a single forest. 
-
-We propose a few baseline comparisons, each of which provide upper bounds, although of different kinds.  First, we compare to the ``batch mode'' decision forest, where at each time $t$, we simply train an entire new forest.  In theory, our online forest will perform as well.  Some empirical evidence in other domains suggests that online performance can even improve batch performance, possibly because the online methods are less likely to get caught in local minima.  Second, we compare to the ``plug-in'' estimator.  Specifically, since we know $P$ on simultated data, we can use the data to directly estimate $P$, and then plug the answer in.  This is not using random forest at all, and will achieve better performance for certain $t$'s, depending on the dimensionality.  Third, we compare to the actual Bayes estimator, using the true $P$.  No learner can possibly ever do better than this, so this provides a strict upper bound on accuracy. 
-
-\subsection{Discrete but Dynamic $P_t$}
+\subsection{Discrete but Dynamic $P_t$ (for fixed model $\mc{P}$)}
 \label{sec:jumps}
 
 A more complicated continual learning setting is the case when $P_t$ can change $K$ times.  In this setting, to obtain theoretical results, we require some assumptions about $P_t$.  If we assume that these densities are sampled from some ``base distribution'', $P_t \sim P$, then we can evaluate the performance of our continual learner with regard to an oracle that knows $P_t$ for all $t$. In practice, dealing with this situation requires estimating change points, and the way one does that depends on whether $K$ is provided.  We assume that $K$ is not provided, as that is a more difficult setting.  
@@ -152,7 +118,7 @@ As a baseline, we will compare this approach to the Oracle approach, which knows
 
 
 
-\subsection{Continuously Dynamic $P_t$}
+\subsection{Continuously Dynamic $P_t$ (for fixed model $\mc{P}$)}
 \label{sec:smooth}
 
 An even more complicated continual learning setting, and the most general setting, is the case when $P_t$ is itself a continuous stochastic process.  For example, we could assume that $P_t$ follows  first order Markov chain dynamics, meaning that $P_t$ is independent of $P_{t-j}$  for all $j=2,3,...$ when given $P_{t-1}$.  More generally, we can simply assume that the dynamics on $P_t$ are relatively smooth, that is, $|P_t - P_{t-1}| < c$.  Regardless, we must either explicitly or implicitly address the fact that $P_t$ is potentially smoothly changing over time.  
@@ -164,7 +130,7 @@ The baseline to evaluate this approach would again be the Oracle approach, which
 
 
 
-\subsection{The Agnostic Setting with Regard to Dynamics of $P$}
+\subsection{The Agnostic Setting with Regard to Dynamics of $P_t$ (for fixed model $\mc{P}$)}
 \label{sec:combo}
 
 
@@ -174,11 +140,24 @@ Specifically, L2F in this context would work as follows.  For each new data poin
 
 The baselines here will again be the Oracle, as well as the parametric method with varying degrees of task knowledge. 
 
-\clearpage
+
+\subsection{Discretely Changing Model $\mc{P}$}
+
+
+
+\subsection{Continuously Changing Model $\mc{P}$}
+
+
+two examples: k-mers and VN for graphs.
+
+
+% \clearpage
 \section{Supervised Lifelong Learning}
 \label{sec:transfer}
 
-In the above setting, there was a single task, but the data were continually coming, and the distribution of the data was potentially changing.  Here, we consider the case when there are multiple discrete tasks.  Formally, we say that there are two datasets, a source dataset $Z^\mathcal{S}$ and a target dataset $Z^\mathcal{T}$. The source dataset contains $n_s = | Z^\mathcal{S}|$ samples, and the target dataset contains $n_t = |Z^\mathcal{T}|$ samples. In general, these $n_s+n_t$ samples could come from a large number of tasks, but for simplicity, and without loss of generality, we will assume each is associated with a single task. The key that makes a given decision theoretic problem transfer learning, rather than classical learning, is that it is possible that the Bayes decision rule associated with the source task is different from the target task.  The difference could arise due to differences in: the measurement spaces, the distributions, the action spaces, the loss function, or the risk functional, because the Bayes decision rule is a function of each of these things.  The goal of transfer learning it to improve the \emph{rate} of learning on the target task, given the source task. More formally, we assume:
+We now consider the case when there are multiple discrete tasks.  Formally, we say that there are two datasets, a source dataset $Z^\mathcal{0}$ and a target dataset $Z^\mathcal{1}$. The source dataset contains $n_0 = | Z^\mathcal{0}|$ samples, and the target dataset contains $n_1 = |Z^\mathcal{1}|$ samples. In general, these $n_0+n_1$ samples could come from a large number of tasks, but for simplicity, and without loss of generality, we will assume each is associated with a single task. 
+
+The key that makes a given decision theoretic problem transfer learning, rather than classical learning, is that it is possible that the Bayes decision rule associated with the source task is different from the target task.  The difference could arise due to differences in: the measurement spaces, the distributions, the action spaces, the loss function, or the risk functional, because the Bayes decision rule is a function of each of these things.  The goal of transfer learning it to improve the \emph{rate} of learning on the target task, given the source task. More formally, we assume:
 $Z_s \sim F_s$ where $z_s \in \mathcal{Z}_s$ and 
 $Z_t \sim F_t$ where $z_t \in \mathcal{Z}_t$. 
 The goal is to choose a sequence of learners, $f$, such that the decision rules that they induce result in lower loss than would could achieve without using the source data:
@@ -199,5 +178,22 @@ The baselines, therefore, for this task
 
 \section{Safe Learning}
 
+
+\appendix
+\section{LifeLong Learning Forests}
+
+
+In the subsequent chapters,  for each of the five components of lifelong learning, we provide:
+\begin{enumerate}
+    \item our proposal for how lifelong learning forests can achieve efficiency, and in which contexts,
+    \item a set of baseline algorithms, and
+    \item a set of challenge problems
+\end{enumerate}
+
+\subsection{Continual Learning}
+
+Our Continual Lifelong Learning Forest will be based on the following.  Recent work demonstrated that a certain class of decision trees is minimax optimal, meaning that the worst risk it achieves over all distributions $P \in \mathcal{P}$ is the smallest possible over all decision functions $\phi \in \Phi$~\cite{Scott2006}.  This is achieved by writing down the solution to finding the best decision tree as a penalized optimization problem, where the penalty corresponds to the tree complexity (not just the tree depth)~\cite{Scott2005}. As it turns out, in other work,~\citet{Xiao2010} proposed a dual averaging method for regularized online learning, which can be applied to learning the trees. Therefore, we propose to combine these two approaches to build collections optimal trees online, which we will combine into a single forest. 
+
+We propose a few baseline comparisons, each of which provide upper bounds, although of different kinds.  First, we compare to the ``batch mode'' decision forest, where at each time $t$, we simply train an entire new forest.  In theory, our online forest will perform as well.  Some empirical evidence in other domains suggests that online performance can even improve batch performance, possibly because the online methods are less likely to get caught in local minima.  Second, we compare to the ``plug-in'' estimator.  Specifically, since we know $P$ on simultated data, we can use the data to directly estimate $P$, and then plug the answer in.  This is not using random forest at all, and will achieve better performance for certain $t$'s, depending on the dimensionality.  Third, we compare to the actual Bayes estimator, using the true $P$.  No learner can possibly ever do better than this, so this provides a strict upper bound on accuracy. 
 
 \end{document}
