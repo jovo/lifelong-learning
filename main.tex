@@ -170,11 +170,7 @@ The goal is to choose a sequence of learners, $f$, such that the decision rules 
     \sum_{t=1}^T \ell(\phi_t( \cdot), z_t)    - \inf_{\phi} \sum_{t=1}^T \ell(\phi_t( \cdot, Z^\mathcal{S}), z_t).
 \end{align}
 
-A recent publication proposed two mechanisms for using random forests for transfer learning~\cite{Segev2016}, which is quite related to what we originally wrote in our L2F proposal. The two ideas essentially boil down to either (1) updating the structure of given trees, and (2) updating the parameters of the trees (e.g., the features and magnitudes).  The empirical results are impressive, though the theoretical results are limited.  Specifically, whether L2F's constructed in either of these ways achieve universal transfer learning remains an open question.  
 
-Moreover, just because two different tasks are different, does \emph{not} mean that one \emph{should} update the induced decision rules.  Rather, the difference between the two tasks, and the relative amount of new data, dictates whether and how much one should transfer, versus either assuming there has been no difference (which incurs some bias but reduced variance), or ignoring the old data (which incurs no bias but increased variance).  Thus, strong theoretical claims about whether and how much one should transfer remain wide open questions, specifically in the L2F setting.  By virtue of the approach we proposed above to estimate the effect size (in Section~\ref{sec:jumps}), we will be able to ascertain how much mixing to perform, and prove the conditions under which an appropriate degree of mixing is warranted. 
-
-The baselines, therefore, for this task 
 
 
 \section{Goal Driven Perception}
@@ -235,5 +231,13 @@ Specifically, L2F in this context would work as follows.  For each new data poin
 
 The baselines here will again be the Oracle, as well as the parametric method with varying degrees of task knowledge. 
 
+
+\subsection{SL2}
+
+A recent publication proposed two mechanisms for using random forests for transfer learning~\cite{Segev2016}, which is quite related to what we originally wrote in our L2F proposal. The two ideas essentially boil down to either (1) updating the structure of given trees, and (2) updating the parameters of the trees (e.g., the features and magnitudes).  The empirical results are impressive, though the theoretical results are limited.  Specifically, whether L2F's constructed in either of these ways achieve universal transfer learning remains an open question.  
+
+Moreover, just because two different tasks are different, does \emph{not} mean that one \emph{should} update the induced decision rules.  Rather, the difference between the two tasks, and the relative amount of new data, dictates whether and how much one should transfer, versus either assuming there has been no difference (which incurs some bias but reduced variance), or ignoring the old data (which incurs no bias but increased variance).  Thus, strong theoretical claims about whether and how much one should transfer remain wide open questions, specifically in the L2F setting.  By virtue of the approach we proposed above to estimate the effect size (in Section~\ref{sec:jumps}), we will be able to ascertain how much mixing to perform, and prove the conditions under which an appropriate degree of mixing is warranted. 
+
+The baselines, therefore, for this task 
 
 \end{document}
