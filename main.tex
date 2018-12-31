@@ -30,30 +30,31 @@ The goal of this document is twofold. First, formally define lifelong learning f
 	\item \textbf{Action space:} $\mc{A}=\{a : a \in \mc{A}\}$.  The action space $\mc{A}$ is simply the set of potential actions.  Actions  include hypothesis testing, estimation, and control. 
 	%
 	\item \textbf{Decision function space:} $\Phi = \{\phi \colon \Xi^n \to \mc{A}, \forall n \}$. The decision function $\phi^n$ maps from a sub-set of measurements $\mathcal{Z} \subseteq \mathcal{Z}^n \subseteq \Xi^n$ to an action, and the decision function space $\Phi^n$ is the set of admissible decision functions for $n$ measurements.
-	\item \textbf{Loss function:} $\ell \colon \mc{Z} \times \mc{A} \to \Real_+$.  The loss function $\ell \in \mc{L}$ scores each action for a given input.  Standard loss functions include the $0-1$ loss and squared error loss. 
+	\item \textbf{Loss function:} $\ell \colon \mc{A} \times \mc{Z} \to \Real_+$.  The loss function $\ell \in \mc{L}$ scores each action for a given input.  Standard loss functions include the $0-1$ loss and squared error loss. Sometimes it will be convenient,  to allow $\ell$ to operate on $\Phi$, rather than $\mc{A}$. This is because each $\phi \in \Phi$ outputs an $a \in \mc{A}$, so $\ell(\phi,z)$ is simply interpretted as $\ell(a,z)$, where $a$ is the output of $\phi$.
 	\item \textbf{Risk functional:} $\RR \colon \mc{L} \times \mc{P} \times \Phi \to \Real_+$.	The risk functional $\RR$ defines the criterion of optimality.  Classically, risk is defined as expected loss, $\RR_\ell(P,\phi) \defn \EE_P[\ell(Z,\phi(Z))]$.
 \end{enumerate}
 
 \noindent  A \emph{Bayes (or Optimal) decision rule} for a given exploitation task $\mathcal{T}=\{\mathcal{Z}, P, \mathcal{A}, \Phi, \ell, \RR\}$ is the decision rule that minimizes risk (which is called \emph{Bayes Risk} for that task: 
 \begin{align}
-    \phi_*^\mathcal{T} = \argmin_{\phi \in \Phi} \EE_P [\ell(Z, \phi(Z))].
+    \phi_*^\mathcal{T} = \argmin_{\phi \in \Phi} \EE_P [\ell(\phi(Z), Z)].
 \end{align}
-A Bayes rule is not necessarily unique for a given task, and a given rule might be Bayes optimal for a number of different tasks.  That said, for any task, there exists a set of Bayes optimal decision rules.  
+A Bayes rule is not necessarily unique for a given task, and a given rule might be Bayes optimal for a number of different tasks.  That said, for any task, there exists a set of Bayes rules.  
 
 
 \subsection{Learning Theory}
 
-In learning theory we devise  \textbf{learners}, $\mathcal{F} = \{f^n : \mathcal{Z}^n \to \Phi^n, \forall n\}$, that map $n$ measurements to an induced decision function, $\mh{\phi}_n$. 
+In learning theory we assume that we observe $T$ samples (or trials), $z_1,\ldots, z_T$, each of which is sampled identically and independently, that is $z_t \iid P$.  Denote the data corpus by $z^T =\{z_1,\ldots, z_t\} \in \mc{Z}^T$.  
+We then devise  \textbf{learners}, $\mathcal{F} = \{f^t : \mathcal{Z}^t \to \Phi^t, \forall t\}$, that map $n$ measurements to an induced decision function, $\mh{\phi}_t$. 
 A \emph{learning rule} is the sequence of learning functions, $\mv{f}= f_1,f_2,\ldots$.  A learning rule is \emph{consistent for model $\mc{P}$} if the risk of its estimated decision function converges to Bayes risk, that is:
 % \begin{align}
-$\mv{f}_* \defn \{ \mv{f} : \RR_\ell(P,f_n(\mc{D}_n)) \to \RR_* \text{ as } n \conv \infty, \forall P \in \mc{P} \}$.
+$\mv{f}_* \defn \{ \mv{f} : \RR_\ell(P,f_t(Z^t)) \to \RR_* \text{ as } t \conv \infty, \forall P \in \mc{P} \}$.
 % \end{align}
 A \emph{universally consistent learning rule} is a learning rule that is consistent for any model $\mc{P}$. 
 %
 The ``no free lunch theorem''~\cite{Wolpert1996} and the ``arbitrary slow convergence theorems''~\cite{Devroye1993} both assert that for a given learning rule $\mv{f}$, there exists a distribution $P$, such that the risk of $\mh{\phi}_n$ is larger than $\delta$, for any $\delta$ with positive probability for all $n$.   Based on this,   learning theory, rather than dealing with asymptotic results, is concerned with finite sample properties for a given space of decision functions, $\Phi$, or a given model $\mathcal{P}$. 
-The key metric in  learning theory is therefore \emph{regret}, that is, the loss relative to the Bayes (or Oracle) learner:
+The key metric in  learning theory is therefore \emph{regret} (or \emph{excess loss}), that is, the cumulative loss relative to the Bayes (or Oracle) learner:
 \begin{align}
-    R(\phi^T) = \sum_{t=1}^T \ell(\mh{\phi}_t, z_t) - \inf_{f \in \mathcal{F}} \sum_{t=1}^T \ell ( \mh{\phi}, z_t).
+    R_T(\mh{\phi}) = \sum_{t=1}^T \ell(\mh{\phi}_t, z_t) - \inf_{f \in \mathcal{F}} \sum_{t=1}^T \ell ( f(Z^T), z_t).
 \end{align}
 
 Because the samples $z_t$ are random, so too will be regret.  Therefore, rather than minimizing empirical regret, the goal is to minimize some function of regret, such as expected regret. 
@@ -61,12 +62,12 @@ Because the samples $z_t$ are random, so too will be regret.  Therefore, rather 
 %     \mathcal{R}_\ell(P^T,\phi^T) = \sum_{t=1}^T \EE_{P_t}[R_T(\phi_t)].
 % \end{align}
 % 
-Alternately, one may desire to minimize the probability that regret is smaller than some constant:
+Alternately, one may desire to maximize the probability that  regret is smaller than some constant $\eps>0$:
 \begin{align} \label{eq:goal}
 % \left\lvert \sum_{t=1}^T \ell(\phi_t, z_t) - \inf_{f \in \mathcal{F}} \sum_{t=1}^T \ell ( \phi(f), z_t) \right\rvert
-    \PP_{ z_1,\ldots z_t \iid P} \left[R(\mh{\phi}_t)  < \eps \right] > 1 - \delta.
+    \PP_{ z_1,\ldots z_T \iid P} \left[R(\mh{\phi})  \leq \eps \right] > 1 - \delta,
 \end{align}
-A decision function space $\Phi$ is said to be ``probably almost correct'' (PAC) learnable when there exists a class of learners $\mc{F}$ that achieves~\eqref{eq:goal} with a  number of samples polynomial in (1) the dimensionality of $z$, $d=|\mc{Z}|$, (2) the computational cost $c$ of representing any $\phi \in \Phi$, (3) $\eps$, and  (4) $\delta$.  A learning rule is said to be \emph{efficient} if it achieves~\eqref{eq:goal} with only polynomial space and/or time with respect to $d,c,\eps,\delta$.  
+where $\delta>0$. A decision function space $\Phi$ is said to be ``probably almost correct'' (PAC) learnable when there exists a class of learners $\mc{F}$ that achieves~\eqref{eq:goal} with a  number of samples polynomial in (1) the dimensionality of $z$, $d=|\mc{Z}|$, (2) the computational cost $c$ of representing any $\phi \in \Phi$, (3) $\eps$, and  (4) $\delta$.  A learning rule is said to be \emph{efficient} if it achieves~\eqref{eq:goal} with only polynomial space and/or time with respect to $d,c,\eps,\delta$.  
 
 \subsection{Lifelong Learning Theory}
 
@@ -81,7 +82,7 @@ The unsupervised case is only appropriate when the density, $P$, has changed, be
 
 A \emph{lifelong learning machine} (L2M) is any learning rule that is designed to solve a lifelong learning multitask. A \emph{consistent L2M} is an L2M that asymptotically achieves Bayes risk.  An \emph{efficient L2M}  is a consistent L2M that achieves Bayes risk with polynomial space and time with respect to the number of samples. The multitasks for which consistent or efficient L2M's exist remain essentially unknown.
 A multitask is \emph{lifelong learnable} when there exists a class of learners $\mc{F}$ that achieves~\eqref{eq:goal} with a number of samples polynomial in $d_0,c_0,\eps_0,\delta_0, d_1, c_1, \eps_1, \delta_1$.  Similarly, a multitask is \emph{efficiently lifelong learnable} when it achieves~\eqref{eq:goal} with only polynomial space and/or time with respect to $d_0,c_0,\eps_0,\delta_0, d_1, c_1, \eps_1, \delta_1$.
-\textbf{Lifelong learning theory is concerned with learning settings where the task is not PAC-learnable, and therefore, there does not exist a universally consistent decision rule.} 
+\textbf{Lifelong learning theory is concerned with identifying the conditions under which lifelong learning multitasks are (not) PAC-learnable, and are (not) efficient.} 
 
 % In other words, there is no single decision rule that is universally consistent.  However, it may still be the case that  lifelong learning is concerned with cases that are not PAC-learnable.  
 
@@ -113,7 +114,11 @@ The approach to this setting, ignoring computational complexity, is trivial.  At
 \subsection{Discrete but Dynamic $P_t$}
 \label{sec:jumps}
 
-A more complicated continual learning setting is the case when $P_t$ can change $K$ times.  In this setting, to obtain theoretical results, we require some assumptions about $P_t$.  If we assume that these densities are sampled from some ``base distribution'', $P_t \sim P$, then we can evaluate the performance of our continual learner with regard to an oracle that knows $P_t$ for all $t$. In practice, dealing with this situation requires estimating change points, and the way one does that depends on whether $K$ is provided.  We assume that $K$ is not provided, as that is a more difficult setting.  
+A more complicated continual learning setting is the case when $P_t$ can change $L$ times.  In this setting, to obtain theoretical results, we require some assumptions about $P_t$.  If we assume that these densities are sampled from some ``base distribution'', $P_t \sim P$, then we can evaluate the performance of our continual learner with regard to an oracle that knows $P_t$ for all $t$. In practice, dealing with this situation requires estimating change points, and the way one does that depends on whether $L$ is provided.  We assume that $L$ is not provided, as that is a more difficult setting.  This change also requires a change to our goal.  Specifically, we want to maximize the probability that regret is smaller than $\eps>0$, but the distribution of that probability changes:
+\begin{align} \label{eq:online}        
+    \PP_{ z_t \sim P_t} \left[R(\mh{\phi})  \leq \eps \right] > 1 - \delta, \text{ where } P_t \in \mc{P}_T \subsetneq \mc{P}, \quad |\mc{P}_T| = L.
+\end{align}
+    
 
 
 
@@ -122,23 +127,18 @@ A more complicated continual learning setting is the case when $P_t$ can change 
 \subsection{Continuously Dynamic $P_t$}
 \label{sec:smooth}
 
-An even more complicated continual learning setting, and the most general setting, is the case when $P_t$ is itself a continuous stochastic process.  This setting is often called ``online learning'' in the learning theory community. For example, one could assume that $P_t$ follows  first order Markov chain dynamics, meaning that $P_t$ is independent of $P_{t-j}$  for all $j=2,3,...$ when given $P_{t-1}$.  More generally, one can simply assume that the dynamics on $P_t$ are relatively smooth, that is, $|P_t - P_{t-1}| < c$.  Regardless, the learning rule must either explicitly or implicitly address the fact that $P_t$ is (potentially smoothly) changing over time.  The current dominant approach in machine learning to address this situation is to assume access to advise from $N$ experts~\cite{Mohri2012}. 
+An even more complicated continual learning setting, and the most general setting, is the case when $P_t$ is itself a continuous stochastic process.  This setting is often called ``online learning'' in the learning theory community. For example, one could assume that $P_t$ follows  first order Markov chain dynamics, meaning that $P_t$ is independent of $P_{t-j}$  for all $j=2,3,...$ when given $P_{t-1}$.  More generally, one can simply assume that the dynamics on $P_t$ are relatively smooth, that is, $\norm{P_t - P_{t-1}} < c$.  Regardless, the learning rule must either explicitly or implicitly address the fact that $P_t$ is (potentially smoothly) changing over time.  The current dominant approach in machine learning to address this situation is to assume access to advise from $N$ experts~\cite{Mohri2012}. Note that the goal of continuously dynamic UL2 is the same as that for discrete by dynamic UL2.  The only difference is is the constraints on $P_t$:
+\begin{align} \label{eq:online}        
+    \PP_{ z_t \sim P_t} \left[R(\mh{\phi})  \leq \eps \right] > 1 - \delta, \text{ where } P_t \in \mc{P}_T \subsetneq \mc{P}, \quad |\mc{P}_T| \leq T,
+\end{align}
+and there may be additional constraints on how $P_t$ is allowed to change.
 
 
-
-
-
-
-\subsection{The Agnostic Setting with Regard to Dynamics of $P_t$}
-\label{sec:combo}
-
-
-In each of the above settings, we assumed that our L2M had domain knowledge with regard to which of the  settings it was currently facing.  The most general setting, however, is that it is unknown whether $P_t$ is changing, and if so, how it is changing.  L2M's can also address this setting, although the theoretical guarantees will be weaker, as this setting is dramatically more difficult.  
 
 
 \subsection{Changing Model $\mc{P}$}
 
-The most complex kind of UL2 where the model changes, or is simply too large. A model is ``too large'' whenever there does not exist a universally consistent learning rule, or similarly, the task is not PAC-learnable. Thus, we can model these tasks actually as a set of learnable tasks;  that set must be exponentially large in $d,c,\eps,$ or $\delta$, which is why it is not learnable.  The L2M must therefore somehow filter the task down to a learnable task, possibly using expert advise, and then learn just the relevant remaining information.  We provide two examples, one is a standard in machine learning, the so-called ``universal concept class''~\cite{Mohri2012}, and the other comes from our recent publication on vertex nomination~\cite{Lyzinski2017}.  
+The most complex kind of UL2 where the model changes, or is simply too large. A model is ``too large'' whenever there does not exist a universally consistent learning rule, or similarly, the task is not PAC-learnable. Thus, we can model these tasks actually as a multitask of learnable tasks;  that set must be exponentially large in $d,c,\eps,$ or $\delta$, which is why it is not learnable.  The L2M must therefore somehow filter the task down to a learnable task, possibly using expert advise, and then learn just the relevant remaining information.  We provide two examples, one is a standard in machine learning, the so-called ``universal concept class''~\cite{Mohri2012}, and the other comes from our recent publication on vertex nomination~\cite{Lyzinski2017}.  
 
 The universal concept class can be described as follows.  Consider the set $\mc{X}=\{0,1\}^d$ of all Boolean vectors with $d$ components, and let $C_n$ be the concept class formed by all subsets of $\mc{X}$.  To guarantee that a Bayes decision rule is within the decision rule space we require that $|\Phi| \geq |C_d| = 2^{2^d}$, because there are $2^d$ possible bitstrings in $\mc{X}$, and therefore the powerset of $\mc{X}$ includes $2^{2^d}$ elements.  Based on this, it is trivial to show a sample complexity bound:
 \begin{align}
@@ -148,6 +148,8 @@ which indicates that the required number of samples is exponential in $d$, meani
 
 \citet{Lyzinski2017} recently showed the existence of another machine learning task for which there does not exist a universally consistent decision rule: vertex nomination (VN).  In VN, we sample two correlated graphs, for which a subset of the vertices are shared.  Given a set of vertices of interest in one graph, we desire to rank the vertices in the other graph such that the highest ranked vertices are the vertices that correspond to the vertices of interest in the first graph.  Corollary 28 of~\citet{Lyzinski2017} demonstrates that no decision rule is universally consistent for this task, without imposing additional prior knowledge or constraints.   The intuition for why this is the case is that as the sample size $n$ increases, so does the model complexity, and therefore the complexity of consistent decision rules, at an exponential rate.
 
+In either case, the goal is to: (1) find the appropriate consistency class, and (2) minimize expected risk (or maximize probability that risk is larger than $\eps$). 
+
 One can, of course, construct other example tasks or multitasks that lack universal consistent decision rules.  For example, if the model (or decision function space) increases faster than sample size, in general, there is no universally consistent decision rules.  Thus, solving these problems requires incorporating additional knowledge.  As suggested above, one approach is to assume the existence of $N$ experts, who offer advise after each sample.  Another is to try to determine what is the space of decision functions for which a given learning rule is consistent (its consistency class).  How to do so in practice remains an open question.
 
 
@@ -155,27 +157,51 @@ One can, of course, construct other example tasks or multitasks that lack univer
 \section{Supervised Lifelong Learning}
 \label{sec:transfer}
 
-We now consider the case when there are multiple discrete tasks.  Formally, we say that there are two datasets, a source dataset $Z^0$ and a target dataset $Z^1$. The source dataset contains $n_0 = | Z^0|$ samples, and the target dataset contains $n_1 = |Z^1|$ samples. In general, these $n_0+n_1$ samples could come from a large number of tasks, but for simplicity, and without loss of generality, we will assume each is associated with a single task.  Each dataset is associated with a different task.  As described above, a task is a sextuple, each of the six different elements of the tasks could differ from one another. Thus, there are therefore $2^6=64$ different flavors of supervised lifelong learning (SL2). The multitask is supervised if and only if the learning rule knows that it faces a new task.
-
-There are several special cases, and counter-examples, of particular interest.  For example, if the density $P$ changes, but both $P_0$ and $P_1$ are in a model $\mc{P}$ that is PAC-learnable, then the problem remains PAC-learnable, even though there does not exist a single Bayes optimal decision rule for both tasks. 
-
+As described above,  a supervised lifelong learning multitask, $\mc{T}$, is composed of two tasks, $\mc{T}_0$, and $\mc{T}_1$.  The fact that it is supervised indicates that for any given sample $z$, the learner is aware of which task the sample corresponds to.  In other words, at each trial, the learner receives the tuple $(z_t, j_t) \in \mc{Z} \times [64]$, where $j_t$ is the task at trial $t$, and there are $64$ possible different flavors of SL2, each corresponding to whether or not one of the six elements of the target tast differs from the source task.    
+Thus, the key that makes a given lifelong learning, rather than classical learning, is that it is possible that the Bayes decision rule associated with the source task is different from the target task.  The difference could arise due to differences in: the measurement spaces, the distributions, the action spaces, the loss function, or the risk functional, because the Bayes decision rule is a function of each of these things. 
 
 
+% We now consider the case when there are multiple discrete tasks.  Formally, we say that there are two datasets, a source dataset $Z^0$ and a target dataset $Z^1$. The source dataset contains $n_0 = | Z^0|$ samples, and the target dataset contains $n_1 = |Z^1|$ samples. In general, these $n_0+n_1$ samples could come from a large number of tasks, but for simplicity, and without loss of generality, we will assume each is associated with a single task.  Each dataset is associated with a different task.  As described above, a task is a sextuple, each of the six different elements of the tasks could differ from one another. Thus, there are therefore $2^6=64$ different flavors of supervised lifelong learning (SL2). The multitask is supervised if and only if the learning rule knows that it faces a new task.
 
-The key that makes a given decision theoretic problem transfer learning, rather than classical learning, is that it is possible that the Bayes decision rule associated with the source task is different from the target task.  The difference could arise due to differences in: the measurement spaces, the distributions, the action spaces, the loss function, or the risk functional, because the Bayes decision rule is a function of each of these things.  The goal of transfer learning it to improve the \emph{rate} of learning on the target task, given the source task. More formally, we assume:
-$Z_s \sim F_s$ where $z_s \in \mathcal{Z}_s$ and 
-$Z_t \sim F_t$ where $z_t \in \mathcal{Z}_t$. 
+
+
+The goal of SL2 it to improve the \emph{rate} of learning on the target task, given the source task. More formally, we assume:
+$Z \iid F_0$ where $z \in \mathcal{Z}_0$ and 
+$W \iid F_1$ where $w \in \mathcal{Z}_1$.  
+And let $T_0$ and $T_1$ denote the sample size of the source and target data corpori, respectively.  
 The goal is to choose a sequence of learners, $f$, such that the decision rules that they induce result in lower loss than would could achieve without using the source data:
 \begin{align}
-    \sum_{t=1}^T \ell(\phi_t( \cdot), z_t)    - \inf_{\phi} \sum_{t=1}^T \ell(\phi_t( \cdot, Z^\mathcal{S}), z_t).
+    R^S(\phi) = \sum_{t=1}^{T_0} \ell(\mh{\phi}_t, z_t)    - \inf_{f \in \mc{F}} \sum_{t=1}^{T_0} \ell(f(Z^{T_0},W^{T_1}), z_t).
 \end{align}
+The above supervised lifelong learning regret is a random variable because it is a function of the data, and therefore, we desire to maximize the probability that $R^S$ is smaller than some constant, $\eps>0$. 
 
+
+There are several special cases, and counter-examples, of particular interest.  For example, if the density $P$ changes, but both $P_0$ and $P_1$ are in a model $\mc{P}$ that is PAC-learnable, then the problem remains PAC-learnable, even though there does not exist a single Bayes optimal decision rule for both tasks. This is the supervised version of unsupervised lifelong learning.  
 
 
 
 \section{Goal Driven Perception}
+\label{sec:goal_driven}
+
+
+% \subsection{The Agnostic Setting with Regard to Dynamics of $P_t$}
+% \label{sec:combo}
+
+
+In each of the above settings, we assumed that our L2M had  knowledge with regard to which of the  settings it was currently facing, either unsupervised or supervised, and then which of the sub-flavors it faced (for example, continuously dynamic online learning, or supervised learning where the measurement space changed).  The most general setting, however, is that the learner is not told which of the sub-flavors it is in.  In each case, learning requires a meta-learner, to determine the setting, and tell the learner what setting it believes it is in. 
+
+For example, in UL2,  if $P_t$ is known to change discretely, then a L2M needs a mechanism by which it can estimate whether  new samples, $z_{t+1}, z_{t+2},\ldots$ are sampled from some $P_{t'} \neq P_t$, and if so, how different are $P_{t'}$ and $P_t$, which can be measured by some metric, $\norm{P_t - P_{t'}}$.  If the model is changing, the L2M needs a mechanism to estimate which consistency class to operate in. Alternately, in SL2, the L2M needs a mechanism to query the larger system.  For example, it could query ``the Boss'' to ascertain whether the action space, decision funcion space, loss function, or risk functional have changed.  Or it could query the measurement devices to see if they have run calibration experiments, that do not provide samples, but do provide ``side information'' that the L2M could use to infer whether the density of the measurements have changed, or whether the measurement space has changed (for example, a new sensor is installed).  
+
+To formalize the above, we say that the metalearner has access to $N$ additional sources of side information.  Its job is to output which of the settings, $j_t \in \mc{J}$ the L2M should be operating in. It could operate in a probabilistic manner, in which it would output a probability distribution of the system being in any of the potential settings.  In SL2, $|\mc{J}|=64$, whereas in UL2, $|\mc{J}|=4$.  In certain settings, additional information is useful for the L2M system. For example, the effect size,  $\norm{P_t - P_{t'}}$, is useful for certain supervised and unsupervised settings. 
+
+
 
 \section{Latent Task Structure Learning}
+
+In all of the above settings, there are multiple tasks that characterize the multitask.  It can be useful to understand the latent structure organizing the different tasks.  For example, assume we have $\mc{T}_0, \mc{T}_1, \ldots, \mc{T}_J$, And the difference between $\mc{T}_0$ and $\mc{T}_j$ is merely a translation, meaning that $\phi_0^* = \phi_j^* + c_j$, where $c \in \Phi$. If we are able to estimate this multitask structure, then we can use this information to improve our regret for subsequent tasks, assuming they follow the same structure.  
+
+For concretely, let's associate with each task a unique $\phi^*_j$.  Further, let's assume that the $\phi$'s are sampled from some distribution $F_\phi$, and that $\Phi \subseteq \RR^p$.  $\Phi$ might be a manifold, or a union of manifolds. Thus, given $Z^0, Z^1, \ldots, Z^J$, estimate the latent structure and $F_\phi$ on that latent structure.   
+
 
 \section{Safe Learning}
 
