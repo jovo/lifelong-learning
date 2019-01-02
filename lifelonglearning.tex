@@ -14,6 +14,7 @@
 The goal of this document is to formally define lifelong learning from the perspective of statistical decision theory and learning theory.    
 % \end{abstract}
 
+\setcounter{tocdepth}{1}
 \tableofcontents
 
 \clearpage
@@ -84,7 +85,7 @@ There also made be some side information, for example, constraints on how the ta
 
 Regret for transfer learning corresponds to the excess loss on $\mc{T}_1$ relative to a learning rule with access to $Z^0$:
 \begin{align}
-    R^{TL}(\mh{\phi}) = \sum_{t=1}^{T_1} \ell_1(\mh{\phi}^1_t, z_t)    - \inf_{f \in \mc{F}} \sum_{t=1}^{T_1} \ell_1(f(W^{T_0}, Z^{T_0}, S^{T_0+T_1}), z_t).
+    R^{TL}(\mh{\phi}) = \sum_{t=1}^{T_1} \ell_1(\mh{\phi}^1_t, z_t)    - \inf_{f \in \mc{F}} \sum_{t=1}^{T_1} \ell_1(f(W^{T_0}, Z^{T_1}, S^{T_0+T_1}), z_t).
 \end{align}
 The goal in transfer learning  is to choose learning rules that satisfy:
 \begin{align} \label{eq:transfer_goal}
@@ -104,26 +105,32 @@ A multitask is \emph{PAC transfer learnable} when there exists a class of learne
 \subsection{Lifelong Learning}
 
 Lifelong learning generalizes and extends online learning and transfer learning.  \textbf{The key difference between lifelong learning, and both online learning and transfer learning, is forgetting}.  Specifically, in lifelong learning, we are not only concerned with loss on the target task, but rather, we are also concerned with loss on the source task.  Specifically, in lifelong learning, regret is defined as the excess loss on both the source and the target task, where the learning rule can use all the data from the source task for the target task:
+% \begin{multiline} \label{eq:l2m_goal}
+%     R^{L2}(\mh{\phi}) = 
+%     \sum_{t=1}^{T_1} \ell_1(\mh{\phi}^1_t, z_t)   
+%     % 
+%     - \inf_{f \in \mc{F}} \sum_{t=1}^{T_1} \ell_1(f(W^{T_0}, Z^{T_1}, S^{T_0+T_1}), z_t) \\
+%     % 
+%     + \sum_{t=1}^{T_0} \ell_0(\mh{\phi}^0_t, w_t)  
+%     % 
+%     - \inf_{f \in \mc{F}} \sum_{t=1}^{T_0+T_1} \ell_0(f(W^{T_0}, Z^{T_1}, S^{T_0+T_1}), w_t)  
+%     % \nonumber \\
+%     % &= R^{TL}(\mh{\phi}) 
+%     % + \sum_{t=1}^{T_0+T_1} \ell_0(\mh{\phi}^0_t, w_t) 
+%     % % 
+%     % - \inf_{f \in \mc{F}} \sum_{t=1}^{T_0+T_1} \ell_0(f(W^{T_0},Z^{T_1} S^{T_0}), w_t) 
+% \end{multiline}
+
+\begin{multline*}
+    R^{L2}(\mh{\phi}) =     \underbrace{\sum_{t=1}^{T_1} \ell_1(\mh{\phi}^1_t, z_t)       - \inf_{f \in \mc{F}} \sum_{t=1}^{T_1} \ell_1(f(W^{T_0}, Z^{T_1}, S^{T_0+T_1}), z_t)}_{\text{transfer learning regret}} + \\
+     \underbrace{\sum_{t=1}^{T_0+T_1} \ell_0(\mh{\phi}^0_t, w_t)   - \inf_{f \in \mc{F}} \sum_{t=1}^{T_0+T_1} \ell_0(f(W^{T_0}, Z^{T_1}, S^{T_0+T_1}), w_t)  }_{\text{forgetting regret}},
+\end{multline*}
+which is simply the sum of transfer learning regret with \emph{forgetting regret}.  Note that forgetting regret includes the excess loss on the source task over all trials, including those trials corresponding to the target task.  This is because in lifelong learning, it is important that performance on the source target does not decrease as the learner is updating for the target task, and the loss on the source target could even continue to improve with additional target task trials (called \emph{backwards transfer}).
+The goal in lifelong learning is similar to the goal in learning theory and transfer learning, to find lifelong learners that satisfy achieve low regret with high probability for a large class of multitasks:
 \begin{align} \label{eq:l2m_goal}
-    R^{L2}(\mh{\phi}) &= 
-    \sum_{t=1}^{T_1} \ell_1(\mh{\phi}^1_t, z_t)   
-    % 
-    - \inf_{f \in \mc{F}} \sum_{t=1}^{T_1} \ell_1(f(W^{T_0}, Z^{T_0}, S^{T_0+T_1}), z_t)
-    %
-    + \sum_{t=1}^{T_0} \ell_0(\mh{\phi}^0_t, w_t)  
-    % 
-    - \inf_{f \in \mc{F}} \sum_{t=1}^{T_0} \ell_0(f(W^{T_0}, S^{T_0}), w_t)  \nonumber
-    \\
-    &= R^{TL}(\mh{\phi}) 
-    + \sum_{t=1}^{T_0} \ell_0(\mh{\phi}^0_t, w_t) 
-    % 
-    - \inf_{f \in \mc{F}} \sum_{t=1}^{T_0} \ell_0(f(W^{T_0}, S^{T_0}), w_t) 
+    \PP\left[R(^{L2}\mh{\phi})  \leq \eps \right] > 1 - \delta.
 \end{align}
-The goal in lifelong learning is similar to the goal in learning theory and transfer learning, to find lifelong learners that satisfy:
-\begin{align} \label{eq:l2m_goal}
-    \PP\left[R(^{L2}\mh{\phi})  \leq \eps \right] > 1 - \delta,
-\end{align}
-for large classes of multitasks.  A \emph{lifelong learning machine} (L2M) is any learning rule that is designed to solve a lifelong learning multitask. A \emph{consistent L2M} is an L2M that asymptotically achieves Bayes risk on the both tasks $\mc{T}_0$ and $\mc{T}_1$.  
+A \emph{lifelong learning machine} (L2M) is any learning rule that is designed to solve a lifelong learning multitask. A \emph{consistent L2M} is an L2M that asymptotically achieves Bayes risk on the both tasks $\mc{T}_0$ and $\mc{T}_1$.  
 A \emph{universally consistent L2M} is an L2M that is consistent for any multitask $\mc{T}'$.  
 An \emph{efficient L2M}  is a consistent L2M that achieves Bayes risk with polynomial space and time with respect to the number of trials. 
 A multitask is \emph{PAC lifelong learnable} when there exists a class of learners $\mc{F}^{L2}$ that achieves~\eqref{eq:l2m_goal} with a number of samples polynomial in $\kappa_0$ and $\kappa_1$.  Similarly, a multitask is \emph{efficiently lifelong learnable} when there exists a class of learners $\mc{F}^{L2}$ that achieves~\eqref{eq:l2m_goal} with only polynomial space and/or time with respect to $\kappa_0$, and $ \kappa_1$.
@@ -134,7 +141,7 @@ A multitask is \emph{PAC lifelong learnable} when there exists a class of learne
 
 There are two flavors of lifelong learning: unsupervised and supervised. 
 In \textbf{unsupervised lifelong learning} (UL2), the lifelong learning rule knows the task \emph{may} change, but does not know when or how. The unsupervised case is only appropriate when the density $P$ has changed, because if any of the other elements change, the learning rule \emph{must} know if it could even try to perform well. 
-The only difference between online learning and UL2 is that UL2 is also concerned with loss on the source task.
+The only difference between online learning and UL2 is that UL2 is also concerned with loss on the source task. UL2 is also sometimes called \emph{continual learning}~\cite{noauthor_undated-cl}.
 
 
 In \textbf{supervised lifelong learning} (SL2), the learning rule knows that the task has changed, but still does not know  the Bayes rule for either task.  The supervised case is more general, as any of the six task elements could change. Note that ``supervised'' here refers to whether the fact that the task has switched is known to the learning rule, not whether the task itself is supervised.  The only difference between supervised lifelong learning and transfer learning is that SL2 is also concerned with loss of the source task. 
@@ -163,7 +170,7 @@ There are several increasingly complex flavors unsupervised lifelong learning (U
 
 
 
-\subsection{Sequential Learning (with Constant Density $P$)}
+\subsection{Sequential Learning}
 \label{sec:constant}
 
 
