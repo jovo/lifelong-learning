@@ -1,0 +1,576 @@
+
+@ARTICLE{Fraley2002-rm,
+  title     = "{Model-Based} Clustering, Discriminant Analysis, and Density
+               Estimation",
+  author    = "Fraley, Chris and Raftery, Adrian E",
+  abstract  = "Cluster analysis is the automated search for groups of related
+               observations in a dataset. Most clustering done in practice is
+               based largely on heuristic but intuitively reasonable
+               procedures, and most clustering methods available in commercial
+               software are also of this type. However, there is little
+               systematic guidance associated with these methods for solving
+               important practical questions that arise in cluster analysis,
+               such as how many clusters are there, which clustering method
+               should be used, and how should outliers be handled. We review a
+               general methodology for model-based clustering that provides a
+               principled statistical approach to these issues. We also show
+               that this can be useful for other problems in multivariate
+               analysis, such as discriminant analysis and multivariate density
+               estimation. We give examples from medical diagnosis, minefield
+               detection, cluster recovery from noisy data, and spatial density
+               estimation. Finally, we mention limitations of the methodology
+               and discuss recent developments in model-based clustering for
+               non-Gaussian data, high-dimensional datasets, large datasets,
+               and Bayesian estimation.",
+  journal   = "J. Am. Stat. Assoc.",
+  publisher = "Taylor \& Francis",
+  volume    =  97,
+  number    =  458,
+  pages     = "611--631",
+  month     =  jun,
+  year      =  2002,
+  keywords  = "bayes factor; breast cancer diagnosis; cluster analysis; em
+               algorithm; gene expression microarray data; markov chain;
+               mixture model; monte carlo; outliers; spatial point process"
+}
+
+
+@ARTICLE{Lyzinski2017-jh,
+  title         = "On consistent vertex nomination schemes",
+  author        = "Lyzinski, Vince and Levin, Keith and Priebe, Carey E",
+  abstract      = "Given a vertex of interest in a network $G_1$, the vertex
+                   nomination problem seeks to find the corresponding vertex of
+                   interest (if it exists) in a second network $G_2$. A vertex
+                   nomination scheme produces a list of the vertices in $G_2$,
+                   ranked according to how likely they are judged to be the
+                   corresponding vertex of interest in $G_2$. The vertex
+                   nomination problem and related information retrieval tasks
+                   have attracted much attention in the machine learning
+                   literature, with numerous applications to social and
+                   biological networks. However, the current framework has
+                   often been confined to a comparatively small class of
+                   network models, and the concept of statistically consistent
+                   vertex nomination schemes has been only shallowly explored.
+                   In this paper, we extend the vertex nomination problem to a
+                   very general statistical model of graphs. Further, drawing
+                   inspiration from the long-established classification
+                   framework in the pattern recognition literature, we provide
+                   definitions for the key notions of Bayes optimality and
+                   consistency in our extended vertex nomination framework,
+                   including a derivation of the Bayes optimal vertex
+                   nomination scheme. In addition, we prove that no universally
+                   consistent vertex nomination schemes exist. Illustrative
+                   examples are provided throughout.",
+  month         =  nov,
+  year          =  2017,
+  archivePrefix = "arXiv",
+  primaryClass  = "stat.ML",
+  eprint        = "1711.05610"
+}
+
+@BOOK{Mohri2018-tf,
+  title     = "Foundations of Machine Learning",
+  author    = "Mohri, Mehryar and Rostamizadeh, Afshin and Talwalkar, Ameet",
+  abstract  = "A new edition of a graduate-level machine learning textbook that
+               focuses on the analysis and theory of algorithms.This book is a
+               general introduction to machine learning that can serve as a
+               textbook for graduate students and a reference for researchers.
+               It covers fundamental modern topics in machine learning while
+               providing the theoretical basis and conceptual tools needed for
+               the discussion and justification of algorithms. It also
+               describes several key aspects of the application of these
+               algorithms. The authors aim to present novel theoretical tools
+               and concepts while giving concise proofs even for relatively
+               advanced topics. Foundations of Machine Learning is unique in
+               its focus on the analysis and theory of algorithms. The first
+               four chapters lay the theoretical foundation for what follows;
+               subsequent chapters are mostly self-contained. Topics covered
+               include the Probably Approximately Correct (PAC) learning
+               framework; generalization bounds based on Rademacher complexity
+               and VC-dimension; Support Vector Machines (SVMs); kernel
+               methods; boosting; on-line learning; multi-class classification;
+               ranking; regression; algorithmic stability; dimensionality
+               reduction; learning automata and languages; and reinforcement
+               learning. Each chapter ends with a set of exercises. Appendixes
+               provide additional material including concise probability
+               review.This second edition offers three new chapters, on model
+               selection, maximum entropy models, and conditional entropy
+               models. New material in the appendixes includes a major section
+               on Fenchel duality, expanded coverage of concentration
+               inequalities, and an entirely new entry on information theory.
+               More than half of the exercises are new to this edition.",
+  publisher = "MIT Press",
+  month     =  nov,
+  year      =  2018,
+  language  = "en"
+}
+
+@ARTICLE{Cavallanti2007-sv,
+  title    = "Tracking the best hyperplane with a simple budget Perceptron",
+  author   = "Cavallanti, Giovanni and Cesa-Bianchi, Nicol{\`o} and Gentile,
+              Claudio",
+  abstract = "Shifting bounds for on-line classification algorithms ensure good
+              performance on any sequence of examples that is well predicted by
+              a sequence of changing classifiers. When proving shifting bounds
+              for kernel-based classifiers, one also faces the problem of
+              storing a number of support vectors that can grow unboundedly,
+              unless an eviction policy is used to keep this number under
+              control. In this paper, we show that shifting and on-line
+              learning on a budget can be combined surprisingly well. First, we
+              introduce and analyze a shifting Perceptron algorithm achieving
+              the best known shifting bounds while using an unlimited budget.
+              Second, we show that by applying to the Perceptron algorithm the
+              simplest possible eviction policy, which discards a random
+              support vector each time a new one comes in, we achieve a
+              shifting bound close to the one we obtained with no budget
+              restrictions. More importantly, we show that our randomized
+              algorithm strikes the optimal trade-off $$U =
+              \textbackslashTheta(\textbackslashsqrt\{B\})$$between budget B
+              and norm U of the largest classifier in the comparison sequence.
+              Experiments are presented comparing several linear-threshold
+              algorithms on chronologically-ordered textual datasets. These
+              experiments support our theoretical findings in that they show to
+              what extent randomized budget algorithms are more robust than
+              deterministic ones when learning shifting target data streams.",
+  journal  = "Mach. Learn.",
+  volume   =  69,
+  number   =  2,
+  pages    = "143--167",
+  month    =  dec,
+  year     =  2007
+}
+
+@BOOK{Devroye1997-bd,
+  title     = "A Probabilistic Theory of Pattern Recognition (Stochastic
+               Modelling and Applied Probability)",
+  author    = "Devroye, Luc and Gy{\"o}rfi, Laszlo and Lugosi, Gabor",
+  publisher = "Springer",
+  edition   = "Corrected edition",
+  month     =  feb,
+  year      =  1997,
+  language  = "en"
+}
+
+@INCOLLECTION{Scott2005-ho,
+  title     = "On the Adaptive Properties of Decision Trees",
+  booktitle = "Advances in Neural Information Processing Systems 17",
+  author    = "Scott, Clayton and Nowak, Robert",
+  editor    = "Saul, L K and Weiss, Y and Bottou, L",
+  publisher = "MIT Press",
+  pages     = "1225--1232",
+  year      =  2005
+}
+
+@ARTICLE{Scott2006-oo,
+  title    = "Minimax-optimal classification with dyadic decision trees",
+  author   = "Scott, C and Nowak, R D",
+  abstract = "Decision trees are among the most popular types of classifiers,
+              with interpretability and ease of implementation being among
+              their chief attributes. Despite the widespread use of decision
+              trees, theoretical analysis of their performance has only begun
+              to emerge in recent years. In this paper, it is shown that a new
+              family of decision trees, dyadic decision trees (DDTs), attain
+              nearly optimal (in a minimax sense) rates of convergence for a
+              broad range of classification problems. Furthermore, DDTs are
+              surprisingly adaptive in three important respects: they
+              automatically 1) adapt to favorable conditions near the Bayes
+              decision boundary; 2) focus on data distributed on lower
+              dimensional manifolds; and 3) reject irrelevant features. DDTs
+              are constructed by penalized empirical risk minimization using a
+              new data-dependent penalty and may be computed exactly with
+              computational complexity that is nearly linear in the training
+              sample size. DDTs comprise the first classifiers known to achieve
+              nearly optimal rates for the diverse class of distributions
+              studied here while also being practical and implementable. This
+              is also the first study (of which we are aware) to consider rates
+              for adaptation to intrinsic data dimension and relevant features.",
+  journal  = "IEEE Trans. Inf. Theory",
+  volume   =  52,
+  number   =  4,
+  pages    = "1335--1353",
+  month    =  apr,
+  year     =  2006,
+  keywords = "minimax techniques;decision trees;Bayes methods;computational
+              complexity;image classification;image sampling;minimax-optimal
+              classification;dyadic decision tree;DDT;convergence rate;Bayes
+              decision boundary;data-dependent penalty;computational
+              complexity;training sample;Classification tree analysis;Decision
+              trees;Convergence;Noise level;Minimax techniques;Statistical
+              learning;Performance analysis;Risk management;Computational
+              complexity;Partitioning algorithms;Complexity
+              regularization;decision trees;feature rejection;generalization
+              error bounds;manifold learning;minimax optimality;pruning;rates
+              of convergence;recursive dyadic partitions;statistical learning
+              theory"
+}
+
+@ARTICLE{Xiao2010-gv,
+  title   = "Dual Averaging Methods for Regularized Stochastic Learning and
+             Online Optimization",
+  author  = "Xiao, Lin",
+  journal = "J. Mach. Learn. Res.",
+  volume  =  11,
+  pages   = "2543--2596",
+  year    =  2010
+}
+
+@ARTICLE{Shen2017-ub,
+  title         = "From Distance Correlation to Multiscale Generalized
+                   Correlation",
+  author        = "Shen, Cencheng and Priebe, Carey E and Vogelstein, Joshua T",
+  abstract      = "Understanding and developing a correlation measure that can
+                   detect general dependencies is not only imperative to
+                   statistics and machine learning, but also crucial to general
+                   scientific discovery in the big data age. We proposed the
+                   Multiscale Generalized Correlation (MGC) in Shen et al. 2017
+                   as a novel correlation measure, which worked well
+                   empirically and helped a number of real data discoveries.
+                   But there is a wide gap with respect to the theoretical
+                   side, e.g., the population statistic, the convergence from
+                   sample to population, how well does the algorithmic Sample
+                   MGC perform, etc. To better understand its underlying
+                   mechanism, in this paper we formalize the population version
+                   of local distance correlations, MGC, and the optimal local
+                   scale between the underlying random variables, by utilizing
+                   the characteristic functions and incorporating the
+                   nearest-neighbor machinery. The population version enables a
+                   seamless connection with, and significant improvement to,
+                   the algorithmic Sample MGC, both theoretically and in
+                   practice, which further allows a number of desirable
+                   asymptotic and finite-sample properties to be proved and
+                   explored for MGC. The advantages of MGC are further
+                   illustrated via a comprehensive set of simulations with
+                   linear, nonlinear, univariate, multivariate, and noisy
+                   dependencies, where it loses almost no power against
+                   monotone dependencies while achieving superior performance
+                   against general dependencies.",
+  journal       = "Journal of American Statistical Association",
+  month         =  oct,
+  year          =  2017,
+  archivePrefix = "arXiv",
+  primaryClass  = "stat.ML",
+  eprint        = "1710.09768"
+}
+
+@ARTICLE{Shui2018-jw,
+  title         = "Accumulating Knowledge for Lifelong Online Learning",
+  author        = "Shui, Changjian and Hedhli, Ihsen and Gagn{\'e}, Christian",
+  abstract      = "Lifelong learning can be viewed as a continuous transfer
+                   learning procedure over consecutive tasks, where learning a
+                   given task depends on accumulated knowledge --- the
+                   so-called knowledge base. Most published work on lifelong
+                   learning makes a batch processing of each task, implying
+                   that a data collection step is required beforehand. We are
+                   proposing a new framework, lifelong online learning, in
+                   which the learning procedure for each task is interactive.
+                   This is done through a computationally efficient algorithm
+                   where the predicted result for a given task is made by
+                   combining two intermediate predictions: by using only the
+                   information from the current task and by relying on the
+                   accumulated knowledge. In this work, two challenges are
+                   tackled: making no assumption on the task generation
+                   distribution, and processing with a possibly unknown number
+                   of instances for each task. We are providing a theoretical
+                   analysis of this algorithm, with a cumulative error upper
+                   bound for each task. We find that under some mild
+                   conditions, the algorithm can still benefit from a small
+                   cumulative error even when facing few interactions.
+                   Moreover, we provide experimental results on both synthetic
+                   and real datasets that validate the correct behavior and
+                   practical usefulness of the proposed algorithm.",
+  month         =  oct,
+  year          =  2018,
+  archivePrefix = "arXiv",
+  primaryClass  = "stat.ML",
+  eprint        = "1810.11479"
+}
+
+@ARTICLE{Lugosi2009-vf,
+  title         = "Online Multi-task Learning with Hard Constraints",
+  author        = "Lugosi, Gabor and Papaspiliopoulos, Omiros and Stoltz,
+                   Gilles",
+  abstract      = "We discuss multi-task online learning when a decision maker
+                   has to deal simultaneously with M tasks. The tasks are
+                   related, which is modeled by imposing that the M-tuple of
+                   actions taken by the decision maker needs to satisfy certain
+                   constraints. We give natural examples of such restrictions
+                   and then discuss a general class of tractable constraints,
+                   for which we introduce computationally efficient ways of
+                   selecting actions, essentially by reducing to an on-line
+                   shortest path problem. We briefly discuss ``tracking'' and
+                   ``bandit'' versions of the problem and extend the model in
+                   various ways, including non-additive global losses and
+                   uncountably infinite sets of tasks.",
+  month         =  feb,
+  year          =  2009,
+  archivePrefix = "arXiv",
+  primaryClass  = "stat.ML",
+  eprint        = "0902.3526"
+}
+
+@UNPUBLISHED{Murugesan2018-tw,
+  title    = "Lifelong Learning with Output Kernels",
+  author   = "Murugesan, Keerthiram and Carbonell, Jaime",
+  abstract = "Lifelong learning poses considerable challenges in terms of
+              effectiveness (minimizing prediction errors for all tasks) and
+              overall computational tractability for real-time performance.
+              This paper addresses continuous lifelong multitask learning by
+              jointly re-estimating the inter-task relations
+              (\textbackslashtextit\{output\} kernel) and the per-task model
+              parameters at each round, assuming data arrives in a streaming
+              fashion. We propose a novel algorithm called
+              \textbackslashtextit\{Online Output Kernel Learning Algorithm\}
+              (OOKLA) for lifelong learning setting. To avoid the memory
+              explosion, we propose a robust budget-limited versions of the
+              proposed algorithm that efficiently utilize the relationship
+              between the tasks to bound the total number of representative
+              examples in the support set. In addition, we propose a two-stage
+              budgeted scheme for efficiently tackling the task-specific budget
+              constraints in lifelong learning. Our empirical results over
+              three datasets indicate superior AUC performance for OOKLA and
+              its budget-limited cousins over strong baselines.",
+  month    =  feb,
+  year     =  2018
+}
+
+@ARTICLE{Chen2016-dk,
+  title     = "Lifelong Machine Learning",
+  author    = "Chen, Zhiyuan and Liu, Bing",
+  abstract  = "Abstract NOTE ? A New Edition of This Title is Available:
+               Lifelong Machine Learning, Second Edition Lifelong Machine
+               Learning (or Lifelong Learning) is an advanced machine learning
+               paradigm that learns continuously, accumulates the knowledge
+               learned in previous tasks, and uses it to help future learning.
+               In the process, the learner becomes more and more knowledgeable
+               and effective at learning. This learning ability is one of the
+               hallmarks of human intelligence. However, the current dominant
+               machine learning paradigm learns in isolation: given a training
+               dataset, it runs a machine learning algorithm on the dataset to
+               produce a model. It makes no attempt to retain the learned
+               knowledge and use it in future learning. Although this isolated
+               learning paradigm has been very successful, it requires a large
+               number of training examples, and is only suitable for
+               well-defined and narrow tasks. In comparison, we humans can
+               learn effectively with a few examples because we have
+               accumulated so much knowledge in the past which enables us to
+               learn with little data or effort. Lifelong learning aims to
+               achieve this capability. As statistical machine learning
+               matures, it is time to make a major effort to break the isolated
+               learning tradition and to study lifelong learning to bring
+               machine learning to new heights. Applications such as
+               intelligent assistants, chatbots, and physical robots that
+               interact with humans and systems in real-life environments are
+               also calling for such lifelong learning capabilities. Without
+               the ability to accumulate the learned knowledge and use it to
+               learn more knowledge incrementally, a system will probably never
+               be truly intelligent. This book serves as an introductory text
+               and survey to lifelong learning. Table of Contents: Preface /
+               Acknowledgments / Introduction / Related Learning Paradigms /
+               Lifelong Supervised Learning / Lifelong Unsupervised Learning /
+               Lifelong Semi-supervised Learning for Information Extraction /
+               Lifelong Reinforcement Learning / Conclusion and Future
+               Directions / Bibliography / Authors' Biographies",
+  journal   = "Synthesis Lectures on Artificial Intelligence and Machine
+               Learning",
+  publisher = "Morgan \& Claypool Publishers",
+  volume    =  10,
+  number    =  3,
+  pages     = "1--145",
+  month     =  nov,
+  year      =  2016
+}
+
+@ARTICLE{Meinshausen2006-kw,
+  title    = "Quantile Regression Forests",
+  author   = "Meinshausen, Nicolai",
+  journal  = "J. Mach. Learn. Res.",
+  volume   =  7,
+  number   = "Jun",
+  pages    = "983--999",
+  year     =  2006
+}
+
+@INPROCEEDINGS{Pentina2014-gg,
+  title      = "A {PAC-Bayesian} bound for Lifelong Learning",
+  booktitle  = "International Conference on Machine Learning",
+  author     = "Pentina, Anastasia and Lampert, Christoph",
+  abstract   = "Transfer learning has received a lot of attention in the
+                machine learning community over the last years, and several
+                effective algorithms have been developed. However, relatively
+                little is known about their theoretical properties, especially
+                in the setting of lifelong learning, where the goal is to
+                transfer information to tasks for which no data have been
+                observed so far. In this work we study lifelong learning from a
+                theoretical perspective. Our main result is a PAC-Bayesian
+                generalization bound that offers a unified view on existing
+                paradigms for transfer learning, such as the transfer of
+                parameters or the transfer of low-dimensional representations.
+                We also use the bound to derive two principled lifelong
+                learning algorithms, and we show that these yield results
+                comparable with existing methods.",
+  pages      = "991--999",
+  month      =  jan,
+  year       =  2014,
+  language   = "en",
+  conference = "International Conference on Machine Learning"
+}
+
+% The entry below contains non-ASCII chars that could not be converted
+% to a LaTeX equivalent.
+@ARTICLE{Ruvolo2013-nu,
+  title     = "Active Task Selection for Lifelong Machine Learning",
+  author    = "Ruvolo, P and Eaton, E",
+  abstract  = "In a lifelong learning framework, an agent acquires knowledge
+               incrementally over consecutive learning tasks, continually
+               building upon its experience. Recent lifelong learning
+               algorithms have achieved nearly identical performance to batch
+               multi-task learning methods while reducing learning time by
+               three orders of magnitude. In this paper, we further improve the
+               scalability of lifelong learning by developing curriculum
+               selection methods that enable an agent to actively select the
+               next task to learn in order to maximize performance on …",
+  journal   = "AAAI",
+  publisher = "aaai.org",
+  year      =  2013
+}
+
+% The entry below contains non-ASCII chars that could not be converted
+% to a LaTeX equivalent.
+@ARTICLE{Silver2013-uo,
+  title     = "Lifelong Machine Learning Systems: Beyond Learning Algorithms",
+  author    = "Silver, D L and Yang, Q and Li, L",
+  abstract  = "Abstract Lifelong Machine Learning, or LML, considers systems
+               that can learn many tasks from one or more domains over its
+               lifetime. The goal is to sequentially retain learned knowledge
+               and to selectively transfer that knowledge when learning a new
+               task so as to develop more accurate hypotheses or policies.
+               Following a review of prior work on LML, we propose that it is
+               now appropriate for the AI community to move beyond learning
+               algorithms to more seriously consider the nature of systems that
+               are capable of learning over a lifetime …",
+  journal   = "AAAI Spring Symposium: Lifelong Machine",
+  publisher = "aaai.org",
+  year      =  2013
+}
+
+@INPROCEEDINGS{Ruvolo2013-hk,
+  title      = "{ELLA}: An Efficient Lifelong Learning Algorithm",
+  booktitle  = "International Conference on Machine Learning",
+  author     = "Ruvolo, Paul and Eaton, Eric",
+  abstract   = "The problem of learning multiple consecutive tasks, known as
+                lifelong learning, is of great importance to the creation of
+                intelligent, general-purpose, and flexible machines. In this
+                paper, we develop a method for online multi-task learning in
+                the lifelong learning setting. The proposed Efficient Lifelong
+                Learning Algorithm (ELLA) maintains a sparsely shared basis for
+                all task models, transfers knowledge from the basis to learn
+                each new task, and refines the basis over time to maximize
+                performance across all tasks. We show that ELLA has strong
+                connections to both online dictionary learning for sparse
+                coding and state-of-the-art batch multi-task learning methods,
+                and provide robust theoretical performance guarantees. We show
+                empirically that ELLA yields nearly identical performance to
+                batch multi-task learning while learning tasks sequentially in
+                three orders of magnitude (over 1,000x) less time.",
+  volume     =  28,
+  pages      = "507--515",
+  month      =  feb,
+  year       =  2013,
+  language   = "en",
+  conference = "International Conference on Machine Learning"
+}
+
+@INPROCEEDINGS{Balcan2015-ao,
+  title      = "Efficient Representations for Lifelong Learning and
+                Autoencoding",
+  booktitle  = "Conference on Learning Theory",
+  author     = "Balcan, Maria-Florina and Blum, Avrim and Vempala, Santosh",
+  abstract   = "It has been a long-standing goal in machine learning, as well
+                as in AI more generally, to develop life-long learning systems
+                that learn many different tasks over time, and reuse insights
+                from tasks learned, ``learning to learn'' as they do so. In
+                this work we pose and provide efficient algorithms for several
+                natural theoretical formulations of this goal. Specifically, we
+                consider the problem of learning many different target
+                functions over time, that share certain commonalities that are
+                initially unknown to the learning algorithm. Our aim is to
+                learn new internal representations as the algorithm learns new
+                target functions, that capture this commonality and allow
+                subsequent learning tasks to be solved more efficiently and
+                from less data. We develop efficient algorithms for two very
+                different kinds of commonalities that target functions might
+                share: one based on learning common low-dimensional and unions
+                of low-dimensional subspaces and one based on learning
+                nonlinear Boolean combinations of features. Our algorithms for
+                learning Boolean feature combinations additionally have a dual
+                interpretation, and can be viewed as giving an efficient
+                procedure for constructing near-optimal sparse Boolean
+                autoencoders under a natural ``anchor-set'' assumption.",
+  pages      = "191--210",
+  month      =  jun,
+  year       =  2015,
+  language   = "en",
+  conference = "Conference on Learning Theory"
+}
+
+@ARTICLE{Segev2016-pu,
+  title    = "Learn on Source, Refine on Target: A Model Transfer Learning
+              Framework with Random Forests",
+  author   = "Segev, Noam and Harel, Maayan and Mannor, Shie and Crammer, Koby
+              and El-Yaniv, Ran",
+  abstract = "We propose novel model transfer-learning methods that refine a
+              decision forest model M learned within a ``source'' domain using
+              a training set sampled from a ``target'' domain, assumed to be a
+              variation of the source. We present two random forest transfer
+              algorithms. The first algorithm searches greedily for locally
+              optimal modifications of each tree structure by trying to locally
+              expand or reduce the tree around individual nodes. The second
+              algorithm does not modify structure, but only the parameter
+              (thresholds) associated with decision nodes. We also propose to
+              combine both methods by considering an ensemble that contains the
+              union of the two forests. The proposed methods exhibit impressive
+              experimental results over a range of problems.",
+  journal  = "IEEE Trans. Pattern Anal. Mach. Intell.",
+  month    =  oct,
+  year     =  2016,
+  language = "en"
+}
+
+@INPROCEEDINGS{Pentina2015-sm,
+  title     = "Multi-task and Lifelong Learning of Kernels",
+  booktitle = "Algorithmic Learning Theory",
+  author    = "Pentina, Anastasia and Ben-David, Shai",
+  abstract  = "We consider a problem of learning kernels for use in SVM
+               classification in the multi-task and lifelong scenarios and
+               provide generalization bounds on the error of a large margin
+               classifier. Our results show that, under mild conditions on the
+               family of kernels used for learning, solving several related
+               tasks simultaneously is beneficial over single task learning. In
+               particular, as the number of observed tasks grows, assuming that
+               in the considered family of kernels there exists one that yields
+               low approximation error on all tasks, the overhead associated
+               with learning such a kernel vanishes and the complexity
+               converges to that of learning when this good kernel is given to
+               the learner.",
+  publisher = "Springer International Publishing",
+  pages     = "194--208",
+  year      =  2015
+}
+
+% The entry below contains non-ASCII chars that could not be converted
+% to a LaTeX equivalent.
+@ARTICLE{Pan2010-bv,
+  title     = "A survey on transfer learning",
+  author    = "Pan, S J and Yang, Q",
+  abstract  = "A major assumption in many machine learning and data mining
+               algorithms is that the training and future data must be in the
+               same feature space and have the same distribution. However, in
+               many real-world applications, this assumption may not hold. For
+               example, we …",
+  journal   = "IEEE Trans. Knowl. Data Eng.",
+  publisher = "ieeexplore.ieee.org",
+  volume    =  22,
+  number    =  10,
+  pages     = "1345--1359",
+  year      =  2010
+}
