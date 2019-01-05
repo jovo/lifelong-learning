@@ -243,18 +243,26 @@ Thus, in general, to solve any of the above multitasks, the goal is to: (1) find
 \label{sec:transfer}
 
 As described above,  a supervised lifelong learning multitask, $\mc{T}$, is composed of two tasks, $\mc{T}_0$, and $\mc{T}_1$.  The fact that it is supervised indicates that for any given sample, the learner is aware of which task the sample corresponds to.  In other words, at each trial, the learner receives the tuple $(z_t, j_t) \in \mc{Z} \times [64]$, where $j_t$ is the task at trial $t$, and there are $64$ possible different flavors of SL2, each corresponding to whether or not one of the six elements of the target tast differs from the source task.    
-Thus, the key that makes a given lifelong learning, rather than classical learning, is that it is possible that the Bayes decision rule associated with the source task is different from the target task.  The difference could arise due to differences in: the measurement spaces, the distributions, the action spaces, the loss function, or the risk functional, because the Bayes decision rule is a function of each of these things.  Below we address each of these possibilities.
+Thus, the key that makes a given task lifelong learning, rather than classical learning, is that it is possible that the Bayes decision rule associated with the source task is different from the target task.  The difference could arise due to differences in: the measurement spaces, the distributions, the action spaces, the loss function, or the risk functional, because the Bayes decision rule is a function of each of these things.  Below we address each of these possibilities.
 
 % TODO: jovo - add content to all the below subsections of SL2
 
 \subsection{Changing Measurement Space}
 
-more to come...
+When $\mc{Z}_0 \neq \mc{Z}_1$, an L2M has several options. For simplicity, assume that $\mc{Z}_0 = \Real^p$ and $\mc{Z}_1 = \Real^{p'}$.  In this case, the L2M can find the intersection of the dimensions of the two tasks, and simply operate on those dimensions.  This option could be effective when the cardinality of the intersection is large, relative to $p$ or $p'$.  Another strategy that is applicable much more generally,  is to apply a \emph{manifold matching} technique, that is, to find an embedding, $\eta \from \mc{Z}_0 \times \mc{Z}_1 \to \Xi$, such that given a new sample $z_t$, regardless of whether there is information in $mc{Z}_0$ and/or $\mc{Z}_1$, it can be embed into $\Xi$~\cite{manifold_matching}.  This is perhaps the most prominent strategy in recent applications, especially in deep learning, with impressive results.  
 
+
+A common strategy for manifold matching proceeds as follows.  First, $n_0$ samples in $\mc{Z}_0$ and $n_1$ samples in $\mc{Z}_0$, define an interpoint comparison function for each space, $\rho_0$ and $\rho_1$.  Second, compute the $n_0 \times n_0$ and $n_1 \times n_1$ interpoint comparison matrices.  Third, search for an embedding of these matrices that jointly optimizes some desirable cost function.  Canonical components analysis is the simplest and most common variant of this approach~\cite{cca}, though more recent proposals including distance correlation~\cite{dcorrca} and Hilbert-Schmidt Information Criterion~\cite{hsic_ca} based approaches have emerged as promisting alternatives. 
 
 \subsection{Changing Density}
 
-more to come...
+When $P_0 \neq P_1$, an L2M also has several options, and which to take depends on the nature of the difference.  Let $\alpha=\norm{ P_0 - P_1}$ be a suitable norm over the true distances between the densities.  In that case, consider three scenarios:
+\begin{enumerate}
+    \item The difference between the distributions is quite small, that is, $\alpha \ll \min (\norm{P_0},\norm{P_1} )$.  In this case, the L2M should operate as if the two densities are the same, as the bias incurred by virtue of assuming they are the same would be less costly than the variance incurred by assuming they are different, and having to estimate both densities.
+    \item The difference between the distributions is quite large, that is, $\alpha \gg \max (\norm{P_0},\norm{P_1} )$. In this case, the L2M should operate as if the two densities are unrelated, as the bias incurred by virtue of not parameter sharing whatsoever would be smaller than the variance incurred by assuming some joint distribution should be estimated.
+    \item The difference....
+\end{enumerate}
+
 
 There are several special cases, and counter-examples, of particular interest.  For example, if the density $P$ changes, but both $P_0$ and $P_1$ are in a model $\mc{P}$ that is PAC-learnable, then the problem remains PAC-learnable, even though there does not exist a single Bayes optimal decision rule for both tasks. This is the supervised version of unsupervised lifelong learning.  
 
@@ -321,6 +329,7 @@ In all of the above settings, there are multiple tasks that characterize the mul
 
 For concretely, let's associate with each task a unique $\phi^*_j$.  Further, let's assume that the $\phi$'s are sampled from some distribution $F_\phi$, and that $\Phi \subseteq \RR^p$.  $\Phi$ might be a manifold, or a union of manifolds. Thus, given $Z^0, Z^1, \ldots, Z^J$, estimate the latent structure and $F_\phi$ on that latent structure.   
 
+more to come...
 
 \section{Safe Learning}
 \label{sec:safe}
