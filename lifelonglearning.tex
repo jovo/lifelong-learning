@@ -219,6 +219,7 @@ For example, one could assume that $P_t$ follows  first order Markov chain dynam
 
 
 \subsection{Changing Model $\mc{P}$}
+\label{sec:model}
 
 In the most complex  UL2 problem  the model changes, or is simply too large for a single lifelong learner to have any performance guarantees. A model is ``too large'' whenever there does not exist a universally consistent learning rule, which implies that the task is not PAC-learnable. We can model these tasks as a multitask of learnable tasks, in other words, the multitask contains a large number of tasks, each of which is PAC learnable.  The L2M must therefore somehow filter the multitask down to a learnable task, possibly using expert advise, and then learn just the relevant remaining information.  We provide two examples, one is a standard in machine learning, the so-called ``universal concept class''~\cite{Mohri2018-tf}, and the other comes from a recent publication on vertex nomination~\cite{Lyzinski2017-jh}.  
 
@@ -249,28 +250,42 @@ Thus, the key that makes a given task lifelong learning, rather than classical l
 
 \subsection{Changing Measurement Space}
 
-When $\mc{Z}_0 \neq \mc{Z}_1$, an L2M has several options. For simplicity, assume that $\mc{Z}_0 = \Real^p$ and $\mc{Z}_1 = \Real^{p'}$.  In this case, the L2M can find the intersection of the dimensions of the two tasks, and simply operate on those dimensions.  This option could be effective when the cardinality of the intersection is large, relative to $p$ or $p'$.  Another strategy that is applicable much more generally,  is to apply a \emph{manifold matching} technique, that is, to find an embedding, $\eta \from \mc{Z}_0 \times \mc{Z}_1 \to \Xi$, such that given a new sample $z_t$, regardless of whether there is information in $mc{Z}_0$ and/or $\mc{Z}_1$, it can be embed into $\Xi$~\cite{manifold_matching}.  This is perhaps the most prominent strategy in recent applications, especially in deep learning, with impressive results.  
+Formally, assume that each $\mt{\mc{Z}}_0=\Xi \times \mc{Z}_0'$ and $\mt{\mc{Z}}_1 = \Xi \times \mc{Z}_1'$.  However, rather than directly observing data sampled from $\mt{\mc{Z}}_j$, we observe data after some unknown (potentially nonlinear) transformation has been applied to each, $\rho_j \from \mt{\mc{Z}}_0 \to \mc{Z}_j$. The goal, therefore, is to find $\Xi$, the joint representational space for both task.  There are two distinct scenarios, either of which is possible when $\mc{Z}_0 \neq \mc{Z}_1$. 
 
+In the simplest scernario,  $\rho_j$ is the identity function, and $\mc{Z}_0 = \Real^p$ and $\mc{Z}_1 = \Real^{p'}$.  In this case, the L2M can find the intersection of the dimensions of the two tasks, and simply operate on those dimensions.  This option could be effective when the cardinality of the intersection is large, relative to $p$ or $p'$.  
+
+
+Another strategy that is applicable much more generally,  is to apply a \emph{manifold matching} technique, that is, to find an embedding, $\eta \from \mc{Z}_0 \times \mc{Z}_1 \to \Xi$, such that given a new sample $z_t$, regardless of whether there is information in $mc{Z}_0$ and/or $\mc{Z}_1$, it can be embed into $\Xi$~\cite{manifold_matching}.  This is perhaps the most prominent strategy in recent applications, especially in deep learning, with impressive results.  
 
 A common strategy for manifold matching proceeds as follows.  First, $n_0$ samples in $\mc{Z}_0$ and $n_1$ samples in $\mc{Z}_0$, define an interpoint comparison function for each space, $\rho_0$ and $\rho_1$.  Second, compute the $n_0 \times n_0$ and $n_1 \times n_1$ interpoint comparison matrices.  Third, search for an embedding of these matrices that jointly optimizes some desirable cost function.  Canonical components analysis is the simplest and most common variant of this approach~\cite{cca}, though more recent proposals including distance correlation~\cite{dcorrca} and Hilbert-Schmidt Information Criterion~\cite{hsic_ca} based approaches have emerged as promisting alternatives. 
 
+
+
 \subsection{Changing Density}
 
-When $P_0 \neq P_1$, an L2M also has several options, and which to take depends on the nature of the difference.  Let $\alpha=\norm{ P_0 - P_1}$ be a suitable norm over the true distances between the densities.  In that case, consider three scenarios:
+When $P_0 \neq P_1$, an L2M  has several options, and which to take depends on the nature of the difference.  Let $\alpha=\norm{ P_0 - P_1}$ be a suitable norm over the true distances between the densities.  In that case, consider four scenarios:
 \begin{enumerate}
     \item The difference between the distributions is quite small, that is, $\alpha \ll \min (\norm{P_0},\norm{P_1} )$.  In this case, the L2M should operate as if the two densities are the same, as the bias incurred by virtue of assuming they are the same would be less costly than the variance incurred by assuming they are different, and having to estimate both densities.
     \item The difference between the distributions is quite large, that is, $\alpha \gg \max (\norm{P_0},\norm{P_1} )$. In this case, the L2M should operate as if the two densities are unrelated, as the bias incurred by virtue of not parameter sharing whatsoever would be smaller than the variance incurred by assuming some joint distribution should be estimated.
-    \item The difference....
+    \item The difference between the distributions is moderate, $\min (\norm{P_0},\norm{P_1} ) < \alpha < \max (\norm{P_0},\norm{P_1} )$.  In this case, parameter sharing is warranted. 
+    \item $P_0 \in \mc{P}$ but $P_1 \notin \mc{P}$.  This is the scneario closely associated with UL2 challenge of changing model $\mc{P}$ discussed in Section~\ref{sec:model}, and is most difficult. 
 \end{enumerate}
 
+The key to success in the changing density scenario is similar to the UL2 challenges.  Specifically, we require a mechanism to quantify the degree of difference between the two distributions.  This question can formally be posed as a hypothesis test:
+\begin{align*}
+    H_0 &: P_0 = P_1 \\
+    H_A &: P_0 \neq P_1.
+\end{align*}
 
-There are several special cases, and counter-examples, of particular interest.  For example, if the density $P$ changes, but both $P_0$ and $P_1$ are in a model $\mc{P}$ that is PAC-learnable, then the problem remains PAC-learnable, even though there does not exist a single Bayes optimal decision rule for both tasks. This is the supervised version of unsupervised lifelong learning.  
+There are many previously proposed non-parametric, universally consistent,  two-sample tests that could be applied here.  Importantly, the test statistic for these tests quantifies the degree of difference between the two distributions.  A further requirement therefore is that the test statistic is monotonic with regard to the difference in the distributions.  Finally, to be generally applicable, the test must be applicable to data in arbitrary metric spaces.  Several distance~\cite{energy} and kernel~\cite{mmd} methods could therefore satisfy these properties. 
+
+Note, however, depending on the task, there may be lower dimensional spaces that contain all the \emph{task relevant information}, but discard other information.  This is the principle behind the information bottleneck principle~\cite{ibp}.  Thus, rather than quantifying the difference between $P_0$ and $P_1$, we quantify the difference between $I(Z^0,X)$ and $I(Z^1,X)$, where $X$ corresponds to the task relevant latent variable, and $I(\cdot)$ is Shannon information. 
 
 
 
 \subsection{Changing Action Space}
 
-more to come...
+Here we consider $\mc{A}_0 \neq \mc{A}_1$.  
 
 \subsection{Changing Decision Function Space}
 
