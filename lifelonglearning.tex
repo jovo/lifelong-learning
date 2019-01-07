@@ -283,25 +283,30 @@ Note, however, depending on the task, there may be lower dimensional spaces that
 
 
 
-\subsection{Changing Action Space}
+\subsection{Changing Action Space, Decision Function Space, Loss Function, or Risk Functional}
 
-Here we consider $\mc{A}_0 \neq \mc{A}_1$.  
+If ``the Boss'' decides, for some reason, that the action space, decision function spae, loss function, or risk functional changes, then the L2M has a ``top down'' lifelong learning problem, rather than a ``bottom up'' change as discussed above.  This case is substantially under developed and studied.  In a certain sense, these are all easier, and more common.  For example, deep learning systems have often been ``pre-trained'' in an unsupervised fashion, prior to training them for the specific supervised task of interest. Moreover, for classification systems that provide a scaled output, such as a posterior probability of being in one class or another, it is relatively straightforward to convert those probabilities into scalar predictions (for a regression problem).  As another example, often the decision function space changes in deployment, if the resources become cut-back, requiring a more computationally efficient system.  While each of these cases can already be somewhat addressed,  addressing them in new multitasks will require further specialization and evelopment. 
 
-\subsection{Changing Decision Function Space}
+Irrespective of which top-down change is imposed, much like in the other SL2 challenges, a mechanism for determining which change has occured, and adjusting the learning is required.  The next section describes this process in more detail. 
 
-more to come...
 
-\subsection{Changing Loss Function}
+% Here we consider $\mc{A}_0 \neq \mc{A}_1$, for example, changing from classification to regression, or object detection to object localization.  
 
-more to come...
+% \subsection{Changing Decision Function Space}
 
-\subsection{Changing Risk Functional}
+% more to come...
 
-more to come...
+% \subsection{Changing Loss Function}
 
-\subsection{Changing Multiple Elements}
+% more to come...
 
-more to come...
+% \subsection{Changing Risk Functional}
+
+% more to come...
+
+% \subsection{Changing Multiple Elements}
+
+% more to come...
 % We now consider the case when there are multiple discrete tasks.  Formally, we say that there are two datasets, a source dataset $Z^0$ and a target dataset $Z^1$. The source dataset contains $n_0 = | Z^0|$ samples, and the target dataset contains $n_1 = |Z^1|$ samples. In general, these $n_0+n_1$ samples could come from a large number of tasks, but for simplicity, and without loss of generality, we will assume each is associated with a single task.  Each dataset is associated with a different task.  As described above, a task is a sextuple, each of the six different elements of the tasks could differ from one another. Thus, there are therefore $2^6=64$ different flavors of supervised lifelong learning (SL2). The multitask is supervised if and only if the learning rule knows that it faces a new task.
 
 
@@ -344,15 +349,29 @@ In all of the above settings, there are multiple tasks that characterize the mul
 
 For concretely, let's associate with each task a unique $\phi^*_j$.  Further, let's assume that the $\phi$'s are sampled from some distribution $F_\phi$, and that $\Phi \subseteq \RR^p$.  $\Phi$ might be a manifold, or a union of manifolds. Thus, given $Z^0, Z^1, \ldots, Z^J$, estimate the latent structure and $F_\phi$ on that latent structure.   
 
-more to come...
+
 
 \section{Safe Learning}
 \label{sec:safe}
 
 % TODO: jovo - error correcting, calibration, etc.
-more to come...
 
-In lifelong learning, everything can change.  A consequence of this is that the L2M can potentially behave quite erratically.  To ensure that the L2M does not exhibit such behaviors, certain ``safety checks'' are required.  
+
+In lifelong learning, everything can change.  A consequence of this is that the L2M can potentially behave quite erratically.  To ensure that the L2M does not exhibit such behaviors, certain ``safety checks'' are required.  These safety checks counter-act potential adversarial attacks. Adversarial attacks are particularly problematic in L2M's, because they can impact not just the action resulting from a single sample, but they can also change the system to lead to undesirable actions for future samples as well.    
+
+There are two inter-related aspects to these safety checks.  First, the L2M must provide not just point estimates, but must also quantify its uncertainty for a given sample.  For example, these uncertainty quantifications could come in terms of posterior probabilities for classification problems, or confidence intervals, for estimation problems.  These metrics of uncertainty provide the user with information about whether the current sample is ``near'' the other previously observed samples.  If not, it might be adversarial.  Second, the L2M must quantify the degree of ``outlyingness'' of a given sample.  
+
+Thus, for any new sample, the L2M should: (1) provide a an estimated best action and a confidence-score associated with each action, (2) provde an estimate of the outlyingness of the sample, (3) decide whether or not to update the system on the basis of the new sample, or withhold it until further information is acquired.  
+
+The first of the above tasks, providing a confidence-score associated with each action, is built-in to any statistical and/or Bayesian L2M.  That said, there remains an issue called ``calibration''.  Specifically, many machine learning models provide such an output, but are not appropriately calibrated, and are therefore overly confident about certain inputs. To ensure that one obtains accurate estimates of uncertainty, rather than merely prediction, requires additional work.  This can be formalized by asserting that our goal, rather than finding the maxmimum likelihood estimator, or the maximum a posteriori estimator, to estimating \emph{quantiles}.  
+
+To be more concrete and formal, consider a two-class classification problem.  In this case, the action space is binary, $\mc{A}=\{0,1\}$, corresponding to the two classes.  However, to ensure a properly calibrated posterior estimate, instead, the action space is the unit inteval, $\mc{A}=(0,1)$, which corresponds to the estimated posterior probability of being in class $1$. The loss functional must be suitably modified as well.  
+
+The second of the above tasks, quantifying outlyingness, is closely related.  Continuing with the two-class example above, if the new sample has a low posterior probability of being in both classes, it is an outlier (where ``low'' is a threshold somebody must set).  However, typically in classification problems, the probability of being in each class is normalized, so that the total probability of being in any of the classes sums to one.  Thus instead, an L2M should also allow the possibility of a sample coming from a different, and unknown class, with its own distinct distribution.  This kind of problem is called ``supervised clustering'', because there are some samples with class labels, but also many others without, and the total number of classes is unknown.  More generally, we desire that the L2M quantifies the probability of a sample coming the the previously observed distribution.  
+
+The third of the above tasks, deciding whether to incorporate the new sample, is a higher level decision.  Specifically, given an estimated outlyingness, and confidence associated with that outlyingness, ``the boss'' can decide on a function that determines whether to use and/or act on the new sample or not.  This is a question of risk mitigation, and therefore, a subjective choice, given the suitable knowledge.
+
+
 
 \bibliographystyle{naturemag}
 \bibliography{lifelonglearningbib}
