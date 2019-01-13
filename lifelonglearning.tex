@@ -324,7 +324,7 @@ Irrespective of which top-down change is imposed, much like in the other SL2 cha
 
 
 
-\section{Goal Driven Perception}
+\section{Context Aware Perception}
 \label{sec:perception}
 
 
@@ -332,7 +332,7 @@ Irrespective of which top-down change is imposed, much like in the other SL2 cha
 % \label{sec:combo}
 
 
-In each of the above settings, we assumed that our L2M had  knowledge with regard to which of the  settings it was currently facing, either unsupervised or supervised, and then which of the sub-flavors it faced (for example, continuously dynamic online learning, or supervised learning where the measurement space changed).  The most general setting, however, is that the learner is not told which of the sub-flavors it is in.  In each case, learning requires a meta-learner, to determine the setting, and tell the learner what setting it believes it is in. 
+In each of the above settings, we assumed that our L2M had  knowledge with regard to which of the  settings it was currently facing, either unsupervised or supervised, and then which of the sub-flavors it faced (for example, continuously dynamic online learning, or supervised learning where the measurement space changed).  The most general setting, however, is that the learner is not told which of the sub-flavors it is in.  In each case, learning requires a \emph{context aware meta-learner}, to determine the setting, and tell the learner what setting it believes it is in. 
 
 For example, in UL2,  if $P_t$ is known to change discretely, then a L2M needs a mechanism by which it can estimate whether  new samples, $z_{t+1}, z_{t+2},\ldots$ are sampled from some $P_{t'} \neq P_t$, and if so, how different are $P_{t'}$ and $P_t$, which can be measured by some metric, $\norm{P_t - P_{t'}}$.  If the model is changing, the L2M needs a mechanism to estimate which consistency class to operate in. Alternately, in SL2, the L2M needs a mechanism to query the larger system.  For example, it could query ``the Boss'' to ascertain whether the action space, decision funcion space, loss function, or risk functional have changed.  Or it could query the measurement devices to see if they have run calibration experiments, that do not provide samples, but do provide ``side information'' that the L2M could use to infer whether the density of the measurements have changed, or whether the measurement space has changed (for example, a new sensor is installed).  
 
